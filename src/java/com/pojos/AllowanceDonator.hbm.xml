@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.AllowanceDonator" optimistic-lock="version" table="allowance_donator">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.PrivateRecord" fetch="select" name="privateRecord" lazy="false">
+      <column name="private_record_id" not-null="true"/>
+    </many-to-one>
+    <property name="name" type="string">
+      <column name="name"/>
+    </property>
+    <property name="addressLine1" type="string">
+      <column length="45" name="address_line1"/>
+    </property>
+    <property name="addressLine2" type="string">
+      <column length="45" name="address_line2"/>
+    </property>
+    <property name="city" type="string">
+      <column length="45" name="city"/>
+    </property>
+    <property name="country" type="string">
+      <column length="45" name="country"/>
+    </property>
+    <property name="mobile" type="string">
+      <column length="45" name="mobile"/>
+    </property>
+    <property name="email" type="string">
+      <column length="45" name="email"/>
+    </property>
+    <property name="fax" type="string">
+      <column length="45" name="fax"/>
+    </property>
+    <property name="status" type="string">
+      <column length="2" name="status"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="allowances" table="allowance">
+      <key>
+        <column name="allowance_donator_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Allowance"/>
+    </set>
+  </class>
+</hibernate-mapping>

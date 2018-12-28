@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.User" optimistic-lock="version" table="user">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.Role" fetch="select" name="role" lazy="false">
+      <column name="role_id" not-null="true"/>
+    </many-to-one>
+    <property name="firstName" type="string">
+      <column length="45" name="first_name"/>
+    </property>
+    <property name="lastName" type="string">
+      <column length="45" name="last_name"/>
+    </property>
+    <property name="nic" type="string">
+      <column length="45" name="nic"/>
+    </property>
+    <property name="dob" type="string">
+      <column length="45" name="dob"/>
+    </property>
+    <property name="gender" type="string">
+      <column length="45" name="gender"/>
+    </property>
+    <property name="addressLine1" type="string">
+      <column length="45" name="address_line1"/>
+    </property>
+    <property name="addressLine2" type="string">
+      <column length="45" name="address_line2"/>
+    </property>
+    <property name="city" type="string">
+      <column length="45" name="city"/>
+    </property>
+    <property name="postalCode" type="string">
+      <column length="45" name="postal_code"/>
+    </property>
+    <property name="email" type="string">
+      <column length="45" name="email"/>
+    </property>
+    <property name="mobile" type="string">
+      <column length="45" name="mobile"/>
+    </property>
+    <property name="regDate" type="timestamp">
+      <column length="19" name="reg_date"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="logins" table="login">
+      <key>
+        <column name="user_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Login"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersons" table="needy_person">
+      <key>
+        <column name="user_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPerson"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="messagesForUserIdTo" table="message">
+      <key>
+        <column name="user_id_to" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Message"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="messagesForUserIdFrom" table="message">
+      <key>
+        <column name="user_id_from" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Message"/>
+    </set>
+  </class>
+</hibernate-mapping>

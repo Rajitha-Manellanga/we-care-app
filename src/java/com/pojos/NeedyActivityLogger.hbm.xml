@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.NeedyActivityLogger" optimistic-lock="version" table="needy_activity_logger">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.NeedyLogin" fetch="select" name="needyLogin" lazy="false">
+      <column name="needy_login_id" not-null="true"/>
+    </many-to-one>
+    <property name="dateTime" type="timestamp">
+      <column length="19" name="date_time"/>
+    </property>
+    <property name="messageType" type="string">
+      <column length="32" name="message_type"/>
+    </property>
+    <property name="message" type="string">
+      <column name="message"/>
+    </property>
+    <property name="description" type="string">
+      <column length="65535" name="description"/>
+    </property>
+    <property name="accessHost" type="string">
+      <column length="64" name="access_host"/>
+    </property>
+  </class>
+</hibernate-mapping>

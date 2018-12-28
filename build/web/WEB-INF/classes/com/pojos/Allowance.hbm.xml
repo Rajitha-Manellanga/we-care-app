@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.Allowance" optimistic-lock="version" table="allowance">
+    <composite-id class="com.pojos.AllowanceId" name="id">
+      <key-property name="id" type="int">
+        <column name="id"/>
+      </key-property>
+      <key-property name="needyPersonId" type="int">
+        <column name="needy_person_id"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="com.pojos.AllowanceDonator" fetch="select" lazy="false" name="allowanceDonator">
+      <column name="allowance_donator_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.NeedyPerson" fetch="select" insert="false" name="needyPerson" update="false" lazy="false">
+      <column name="needy_person_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.PrivateRecord" fetch="select" name="privateRecord" lazy="false">
+      <column name="private_record_id" not-null="true"/>
+    </many-to-one>
+    <property name="date" type="timestamp">
+      <column length="19" name="date"/>
+    </property>
+    <property name="unit" type="string">
+      <column length="45" name="unit"/>
+    </property>
+    <property name="amount" type="java.lang.Integer">
+      <column name="amount"/>
+    </property>
+    <property name="comment" type="string">
+      <column length="65535" name="comment"/>
+    </property>
+    <property name="status" type="string">
+      <column length="2" name="status"/>
+    </property>
+  </class>
+</hibernate-mapping>

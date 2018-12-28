@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3307/project_db?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">1234</property>
+    <mapping resource="com/pojos/Guardian.hbm.xml"/>
+    <mapping resource="com/pojos/Message.hbm.xml"/>
+    <mapping resource="com/pojos/NeedyPersonHasEvent.hbm.xml"/>
+    <mapping resource="com/pojos/ActivityLogger.hbm.xml"/>
+    <mapping resource="com/pojos/NeedyLogin.hbm.xml"/>
+    <mapping resource="com/pojos/District.hbm.xml"/>
+    <mapping resource="com/pojos/Login.hbm.xml"/>
+    <mapping resource="com/pojos/PrivateRecord.hbm.xml"/>
+    <mapping resource="com/pojos/Document.hbm.xml"/>
+    <mapping resource="com/pojos/ProvinceOfficer.hbm.xml"/>
+    <mapping resource="com/pojos/Event.hbm.xml"/>
+    <mapping resource="com/pojos/NeedyPersonHasGuardian.hbm.xml"/>
+    <mapping resource="com/pojos/DsOfficier.hbm.xml"/>
+    <mapping resource="com/pojos/Role.hbm.xml"/>
+    <mapping resource="com/pojos/DivisionalSecretariat.hbm.xml"/>
+    <mapping resource="com/pojos/DistrictOfficer.hbm.xml"/>
+    <mapping resource="com/pojos/Province.hbm.xml"/>
+    <mapping resource="com/pojos/User.hbm.xml"/>
+    <mapping resource="com/pojos/RoleHasPermission.hbm.xml"/>
+    <mapping resource="com/pojos/Allowance.hbm.xml"/>
+    <mapping resource="com/pojos/PrivateRecordHasNeedyPerson.hbm.xml"/>
+    <mapping resource="com/pojos/AllowanceDonator.hbm.xml"/>
+    <mapping resource="com/pojos/SecurityQuestion.hbm.xml"/>
+    <mapping resource="com/pojos/NeedyActivityLogger.hbm.xml"/>
+    <mapping resource="com/pojos/DeathDetail.hbm.xml"/>
+    <mapping resource="com/pojos/Permission.hbm.xml"/>
+    <mapping resource="com/pojos/NeedyPerson.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

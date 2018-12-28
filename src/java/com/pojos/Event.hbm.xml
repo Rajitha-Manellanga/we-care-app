@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.Event" optimistic-lock="version" table="event">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.PrivateRecord" fetch="select" name="privateRecord" lazy="false">
+      <column name="private_record_id" not-null="true"/>
+    </many-to-one>
+    <property name="beginDate" type="timestamp">
+      <column length="19" name="begin_date"/>
+    </property>
+    <property name="endDate" type="timestamp">
+      <column length="19" name="end_date"/>
+    </property>
+    <property name="venue" type="string">
+      <column name="venue"/>
+    </property>
+    <property name="description" type="string">
+      <column name="description"/>
+    </property>
+    <property name="status" type="string">
+      <column length="2" name="status"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasEvents" table="needy_person_has_event">
+      <key>
+        <column name="event_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPersonHasEvent"/>
+    </set>
+  </class>
+</hibernate-mapping>

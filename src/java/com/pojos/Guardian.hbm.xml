@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.Guardian" optimistic-lock="version" table="guardian">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <property name="nic" type="string">
+      <column length="45" name="nic"/>
+    </property>
+    <property name="firstName" type="string">
+      <column length="45" name="first_name"/>
+    </property>
+    <property name="lastName" type="string">
+      <column length="45" name="last_name"/>
+    </property>
+    <property name="gender" type="string">
+      <column length="2" name="gender"/>
+    </property>
+    <property name="relationship" type="string">
+      <column length="7" name="relationship"/>
+    </property>
+    <property name="mobile" type="string">
+      <column length="45" name="mobile"/>
+    </property>
+    <property name="email" type="string">
+      <column length="45" name="email"/>
+    </property>
+    <property name="addressLine1" type="string">
+      <column length="45" name="address_line1"/>
+    </property>
+    <property name="addressLine2" type="string">
+      <column length="45" name="address_line2"/>
+    </property>
+    <property name="city" type="string">
+      <column length="45" name="city"/>
+    </property>
+    <property name="postalCode" type="string">
+      <column length="45" name="postal_code"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasGuardians" table="needy_person_has_guardian">
+      <key>
+        <column name="guardian_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPersonHasGuardian"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.District" optimistic-lock="version" table="district">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.Province" fetch="select" name="province">
+      <column name="province_id" not-null="true"/>
+    </many-to-one>
+    <property name="name" type="string">
+      <column length="45" name="name"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="districtOfficers" table="district_officer">
+      <key>
+        <column name="district_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.DistrictOfficer"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="divisionalSecretariats" table="divisional_secretariat">
+      <key>
+        <column name="district_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.DivisionalSecretariat"/>
+    </set>
+  </class>
+</hibernate-mapping>

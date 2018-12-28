@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.NeedyPerson" optimistic-lock="version" table="needy_person">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.DivisionalSecretariat" fetch="select" lazy="false" name="divisionalSecretariat">
+      <column name="divisional_secretariat_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.Role" fetch="select" lazy="false" name="role">
+      <column name="role_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.User" fetch="select" lazy="false" name="user">
+      <column name="user_id" not-null="true"/>
+    </many-to-one>
+    <property name="code" type="string">
+      <column length="45" name="code"/>
+    </property>
+    <property name="firstName" type="string">
+      <column length="45" name="first_name"/>
+    </property>
+    <property name="lastName" type="string">
+      <column length="45" name="last_name"/>
+    </property>
+    <property name="fullName" type="string">
+      <column name="full_name"/>
+    </property>
+    <property name="nic" type="string">
+      <column length="45" name="nic"/>
+    </property>
+    <property name="dob" type="timestamp">
+      <column length="19" name="dob"/>
+    </property>
+    <property name="gender" type="string">
+      <column length="2" name="gender"/>
+    </property>
+    <property name="addressLine1" type="string">
+      <column length="45" name="address_line1"/>
+    </property>
+    <property name="addressLine2" type="string">
+      <column length="45" name="address_line2"/>
+    </property>
+    <property name="city" type="string">
+      <column length="45" name="city"/>
+    </property>
+    <property name="postalCode" type="string">
+      <column length="45" name="postal_code"/>
+    </property>
+    <property name="email" type="string">
+      <column length="45" name="email"/>
+    </property>
+    <property name="mobile" type="string">
+      <column length="45" name="mobile"/>
+    </property>
+    <property name="martialStatus" type="string">
+      <column length="8" name="martial_status"/>
+    </property>
+    <property name="bloodGroup" type="string">
+      <column length="6" name="blood_group"/>
+    </property>
+    <property name="educationalLevel" type="string">
+      <column length="7" name="educational_level"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasGuardians" table="needy_person_has_guardian">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPersonHasGuardian"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="deathDetails" table="death_detail">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.DeathDetail"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="needyLogins" table="needy_login">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyLogin"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="allowances" table="allowance">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Allowance"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="documents" table="document">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Document"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="privateRecordHasNeedyPersons" table="private_record_has_needy_person">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.PrivateRecordHasNeedyPerson"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasEvents" table="needy_person_has_event">
+      <key>
+        <column name="needy_person_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPersonHasEvent"/>
+    </set>
+  </class>
+</hibernate-mapping>

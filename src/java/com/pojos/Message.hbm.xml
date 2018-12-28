@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.Message" optimistic-lock="version" table="message">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one class="com.pojos.User" fetch="select" name="userByUserIdTo" lazy="false">
+      <column name="user_id_to" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.User" fetch="select" name="userByUserIdFrom" lazy="false">
+      <column name="user_id_from" not-null="true"/>
+    </many-to-one>
+    <property name="description" type="string">
+      <column length="65535" name="description"/>
+    </property>
+    <property name="insertDatetime" type="timestamp">
+      <column length="19" name="insert_datetime"/>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.NeedyLogin" optimistic-lock="version" table="needy_login">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.NeedyPerson" fetch="select" name="needyPerson" lazy="false">
+      <column name="needy_person_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.SecurityQuestion" fetch="select" name="securityQuestion" lazy="false">
+      <column name="security_question_id" not-null="true"/>
+    </many-to-one>
+    <property name="password" type="string">
+      <column name="password"/>
+    </property>
+    <property name="noAttempts" type="string">
+      <column name="no_attempts"/>
+    </property>
+    <property name="answer" type="string">
+      <column name="answer"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="needyActivityLoggers" table="needy_activity_logger">
+      <key>
+        <column name="needy_login_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyActivityLogger"/>
+    </set>
+  </class>
+</hibernate-mapping>

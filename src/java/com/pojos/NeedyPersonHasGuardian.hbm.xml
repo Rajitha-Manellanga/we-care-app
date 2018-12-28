@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.NeedyPersonHasGuardian" optimistic-lock="version" table="needy_person_has_guardian">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.Guardian" fetch="select" name="guardian" lazy="false">
+      <column name="guardian_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.NeedyPerson" fetch="select" name="needyPerson" lazy="false">
+      <column name="needy_person_id" not-null="true"/>
+    </many-to-one>
+    <property name="startingYear" type="java.lang.Integer">
+      <column name="starting_year"/>
+    </property>
+    <property name="endingYear" type="java.lang.Integer">
+      <column name="ending_year"/>
+    </property>
+  </class>
+</hibernate-mapping>

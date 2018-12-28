@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="project_db"/>
+  <table-filter match-name="district"/>
+  <table-filter match-name="activity_logger"/>
+  <table-filter match-name="event"/>
+  <table-filter match-name="needy_person_has_guardian"/>
+  <table-filter match-name="document"/>
+  <table-filter match-name="district_officer"/>
+  <table-filter match-name="allowance_donator"/>
+  <table-filter match-name="private_record"/>
+  <table-filter match-name="death_detail"/>
+  <table-filter match-name="needy_activity_logger"/>
+  <table-filter match-name="province"/>
+  <table-filter match-name="login"/>
+  <table-filter match-name="permission"/>
+  <table-filter match-name="needy_person"/>
+  <table-filter match-name="needy_login"/>
+  <table-filter match-name="divisional_secretariat"/>
+  <table-filter match-name="needy_person_has_event"/>
+  <table-filter match-name="allowance"/>
+  <table-filter match-name="message"/>
+  <table-filter match-name="user"/>
+  <table-filter match-name="security_question"/>
+  <table-filter match-name="province_officer"/>
+  <table-filter match-name="role_has_permission"/>
+  <table-filter match-name="private_record_has_needy_person"/>
+  <table-filter match-name="guardian"/>
+  <table-filter match-name="role"/>
+  <table-filter match-name="ds_officier"/>
+</hibernate-reverse-engineering>

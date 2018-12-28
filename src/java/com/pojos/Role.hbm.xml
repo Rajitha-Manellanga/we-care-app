@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.Role" optimistic-lock="version" table="role">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <property name="name" type="string">
+      <column length="45" name="name"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="provinceOfficers" table="province_officer">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.ProvinceOfficer"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="needyPersons" table="needy_person">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.NeedyPerson"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="users" table="user">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.User"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="dsOfficiers" table="ds_officier">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.DsOfficier"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="districtOfficers" table="district_officer">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.DistrictOfficer"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="roleHasPermissions" table="role_has_permission">
+      <key>
+        <column name="role_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.RoleHasPermission"/>
+    </set>
+  </class>
+</hibernate-mapping>

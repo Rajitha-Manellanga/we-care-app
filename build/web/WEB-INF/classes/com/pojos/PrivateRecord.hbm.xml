@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.PrivateRecord" optimistic-lock="version" table="private_record">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <property name="type" type="string">
+      <column length="11" name="type"/>
+    </property>
+    <property name="name" type="string">
+      <column length="45" name="name"/>
+    </property>
+    <property name="subName" type="string">
+      <column length="45" name="sub_name"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="false" name="events" table="event">
+      <key>
+        <column name="private_record_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Event"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="privateRecordHasNeedyPersons" table="private_record_has_needy_person">
+      <key>
+        <column name="private_record_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.PrivateRecordHasNeedyPerson"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="allowances" table="allowance">
+      <key>
+        <column name="private_record_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.Allowance"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="false" name="allowanceDonators" table="allowance_donator">
+      <key>
+        <column name="private_record_id" not-null="true"/>
+      </key>
+      <one-to-many class="com.pojos.AllowanceDonator"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="project_db" name="com.pojos.RoleHasPermission" optimistic-lock="version" table="role_has_permission">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="com.pojos.Permission" fetch="select" name="permission" lazy="false">
+      <column name="permission_id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="com.pojos.Role" fetch="select" name="role" lazy="false">
+      <column name="role_id" not-null="true"/>
+    </many-to-one>
+  </class>
+</hibernate-mapping>
