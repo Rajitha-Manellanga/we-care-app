@@ -86,8 +86,8 @@
                                     <div class="row">
                                         <h5>Basic Profile</h5>
                                     </div>
-                                <s:url var="addURL" value="updateguardianprofile.htm"></s:url>
-                                <form id="basicprofile" action="${addURL}" method="POST">
+                                <s:url var="addURL" value="updategprofile.htm"></s:url>
+                                <form  action="addgprofile.htm " method="POST">
                                     <input type="hidden" value="${gur.id}" name="gid"/>
                                   
                                     <div class="row" >
@@ -105,7 +105,7 @@
                                         </div>
                                         <input type="hidden" value="${code}" name="needycode"/>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="firstname" value="${gur.firstName}"/>
+                                            <input type="text"  class=" validate" disabled=""name="firstname" value="${gur.firstName}"/>
                                         </div>
 
                                     </div>
@@ -114,7 +114,7 @@
                                             <label for="fname">Last Name</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="lastname" value="${gur.lastName}"/>
+                                            <input type="text"  class=" validate" disabled="" name="lastname" value="${gur.lastName}"/>
                                         </div>
 
                                     </div>
@@ -151,15 +151,7 @@
                                          <div class="input-field col s2">
                                             <h5>To : ${needygur.endingYear}</h5>
                                         </div>
-                                         <div class="input-field col s2">
-                                                <input type="checkbox"  id="indeterminate-checkbox2" class="filled-in" name="tolevel"/>
-                                                <label for="indeterminate-checkbox2">Update Year</label>
-                                            </div>
-                                            <div class="input-field col s2">
-                                                <select class="form-control validate" name="toyear" ng-controller="addyear">
-                                                    <option ng-repeat="x in years">{{x}}</option>
-                                                </select>
-                                            </div>
+                                      
 
                                     </div>
 
@@ -173,7 +165,7 @@
                                             <label for="fname">Address Line1</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="address1" value="${gur.addressLine1}"/>
+                                            <input type="text"  class=" validate" name="address1" value="${gur.addressLine1}" disabled=""/>
                                         </div>
 
                                     </div>
@@ -182,7 +174,7 @@
                                             <label for="fname">Address Line2</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="address2" value="${gur.addressLine2}"/>
+                                            <input type="text"  class=" validate" name="address2" value="${gur.addressLine2}" disabled=""/>
                                         </div>
 
                                     </div>
@@ -191,7 +183,7 @@
                                             <label for="fname">City</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="city" value="${gur.city}"/>
+                                            <input type="text"  class=" validate" name="city" value="${gur.city}" disabled=""/>
                                         </div>
 
                                     </div>
@@ -200,7 +192,7 @@
                                             <label for="fname">Postal Code</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="postalcode" value="${gur.postalCode}"/>
+                                            <input type="text"  class=" validate" name="postalcode" value="${gur.postalCode}" disabled=""/>
                                         </div>
 
                                     </div>
@@ -218,13 +210,13 @@
                                             <label for="fname">Mobile</label>
                                         </div>
                                         <div class="input-field col s6">
-                                            <input type="text"  class=" validate" name="mobile" value="${gur.mobile}"/>
+                                            <input type="text"  class=" validate" name="mobile" value="${gur.mobile}" disabled=""/>
                                         </div>
 
                                     </div>
-                                    <div class="row">
+                                    <!--div class="row">
                                         <input type="submit" value="Save Changes" class="waves-effect waves-light btn" />
-                                    </div>
+                                    </div-->
 
                                 </form>
 
@@ -237,8 +229,6 @@
                 </div>
             </div>
 
-            <!-- /.col-lg-12 --> 
-            <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
         </div>
         <%@include file="resourcefilejs.jsp" %>
     </body>

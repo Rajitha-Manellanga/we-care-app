@@ -9,6 +9,7 @@ import com.dao.UserDAO;
 import com.pojos.Login;
 import com.pojos.NeedyPerson;
 import com.pojos.Role;
+import com.pojos.SecurityQuestion;
 import com.pojos.User;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -28,10 +29,49 @@ import org.springframework.stereotype.Repository;
 @Repository("userDAO")
 public class UserDAOImp implements UserDAO {
 
+    @Override
+    public User searchRegisterUser(String nic, String email) {
+        Session session = this.sessionFactory.openSession();
+        User u = null;
+        try {
+            Criteria c = session.createCriteria(User.class);
+            c.add(Restrictions.eq("nic", nic));
+            c.add(Restrictions.eq("email", email));
+            u = (User) c.uniqueResult();
+
+        } catch (Exception e) {
+
+        } finally {
+            session.close();
+        }
+        return u;
+    }
+
+    @Override
+    public SecurityQuestion searchQuestion() {
+        Session session = this.sessionFactory.openSession();
+        SecurityQuestion u = null;
+        try {
+            Criteria c = session.createCriteria(SecurityQuestion.class);
+            c.add(Restrictions.eq("id", 1));
+            u = (SecurityQuestion) c.uniqueResult();
+
+        } catch (Exception e) {
+
+        } finally {
+            session.close();
+        }
+        return u;
+    }
+
     public enum RoleName {
 
         ADMIN,
-        DATA_ENTRY_OPERATOR;
+        DATA_ENTRY_OPERATOR,
+        DATA_ENTRY_OPERATOR_DS,
+        DATA_ENTRY_OPERATOR_DIS,
+        DATA_ENTRY_OPERATOR_PRO;
+        ;
     }
 
     private static final int NO_ATTEMPTS = 3;
@@ -127,13 +167,15 @@ public class UserDAOImp implements UserDAO {
             criteria.add(Restrictions.eq("email", email));
             user = (User) criteria.uniqueResult();
 
-            Criteria criteria2 = session.createCriteria(Login.class);
-            criteria2.add(Restrictions.eq("user", user));
-            criteria2.add(Restrictions.eq("password", password));
-            login = (Login) criteria2.uniqueResult();
-            user2 = login.getUser();
+            if (user != null) {
+                Criteria criteria2 = session.createCriteria(Login.class);
+                criteria2.add(Restrictions.eq("user", user));
+                criteria2.add(Restrictions.eq("password", password));
+                login = (Login) criteria2.uniqueResult();
+                user2 = login.getUser();
+            }
 
-        } catch (HibernateException ex) {
+        } catch (Exception ex) {
 
         } finally {
             session.close();

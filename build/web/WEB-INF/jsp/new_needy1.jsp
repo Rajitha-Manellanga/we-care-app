@@ -21,9 +21,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript">
-        var displayResult = function () {
-            var msg = location.search;
+        
+        var validateDeath=function (){
+             var val=document.getElementById('indeterminate-checkbox');
+             if(val.checked==true){
+                
+             }
+            
+        };
+     
+        var disableCh = function () {
+            var val=document.getElementById('indeterminate-checkbox');
+            var x = document.getElementById('deathday');
+            var y = document.getElementById('dreason');
+            var z = document.getElementById('dlocation');
+            var w = document.getElementById('dreason');
+            var ww= document.getElementById('dcomment');
+            x.disabled=!val.checked;
+            y.disabled=!val.checked;
+            z.disabled=!val.checked;
+            w.disabled=!val.checked;
+            ww.disabled=!val.checked;
+            
+            if(val.checked){
+                x.attributes["required"] = "";
+            }
            
+
         }
     </script>
 
@@ -176,8 +200,8 @@
                             var x = col.innerHTML.split('<')[0];
                             if (row.cells[j + 1] != null) {
                                 var y = row.cells[j + 1].innerHTML.split('<')[0];
-                                if(x==primary && y==second){
-                                    bool=true;
+                                if (x == primary && y == second) {
+                                    bool = true;
                                     break;
                                 }
                             }
@@ -202,10 +226,10 @@
                     else
                         alert('Please select a value from Category');
 
-                }else{
+                } else {
                     alert('Item has already added');
                 }
-                
+
             };
 
             $scope.removeList = function (index) {
@@ -241,7 +265,7 @@
     <title>Add New</title>
 </head>
 
-<body onload="displayResult">
+<body>
 
 
     <div id="wrapper">
@@ -253,10 +277,9 @@
         <%@include  file="menu_admin.jsp" %>
         <%}%>
         <%
-            if (u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_PRO.toString())||
-                    u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DIS.toString())||
-                    u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DS.toString())
-            ) {%>
+            if (u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_PRO.toString())
+                    || u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DIS.toString())
+                    || u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DS.toString())) {%>
         <%@include  file="menu_user.jsp" %>
         <%}
         %>
@@ -285,7 +308,7 @@
 
                             <div class="card-content">
                                 <s:url var="addURL" value="newneedy2.htm"></s:url>
-                                <form  method="POST" action="${addURL}">
+                                <form  method="POST" action="${addURL}" onsubmit="validateDeath()">
 
                                     <div class="row">
                                         <div class="input-field col s6">
@@ -302,12 +325,12 @@
                                     <div class="row">
                                         <div class="input-field col s6">
                                             <label for="fname">First Name</label>
-                                            <input type="text"  class=" validate" name="firstname" value="${firstname}" />
+                                            <input type="text"  class=" validate" name="firstname" value="${firstname}" required="" />
                                             <p>${fname}</p>
                                         </div>
                                         <div class="input-field col s6">
                                             <label for="lname">Last Name</label>
-                                            <input type="text" class=" validate" name="lastname" value="${lastname}"/>
+                                            <input type="text" class=" validate" name="lastname" value="${lastname}" required=""/>
                                             <p>${lname}</p>
                                         </div>
                                     </div>
@@ -315,7 +338,7 @@
                                         <div class="input-field col s12">
                                             <label for="fullName">Full Name</label>
                                             <br/>
-                                            <input type="text" class=" validate" name="fullname" value="${fullname}"/>
+                                            <input type="text" class=" validate" name="fullname" value="${fullname}" required=""/>
                                             <p>${flname}</p>
                                         </div>
 
@@ -346,18 +369,7 @@
 
 
                                     </div>
-                                    <div class="row">
-
-                                        <div class="input-field col s4">
-                                            <label for="photo">Photo</label>
-                                            <br/>
-                                            <br/>
-                                            <input type="file" class="btn-success" value="Upload File" style="width: 70px;">
-
-                                        </div>
-
-
-                                    </div>
+                                    
 
                                     <div class="row" >
                                         <div class="input-field col s6" ng-controller="addbloodgrp">
@@ -370,7 +382,7 @@
 
                                         </div>
                                         <div class="input-field col s6" ng-controller="addmartial">
-                                            <label>Martial Status</label>
+                                            <label>Marital Status</label>
                                             <br/>
                                             <br/>
                                             <select class="form-control validate" name="martialstatus">
@@ -492,7 +504,7 @@
                                     <br/>
 
                                     <p>
-                                        <input type="checkbox" id="indeterminate-checkbox" ng-model="death" ng-checked="checked == true" name="booleandeath" ng-disabled="checked == false"/>
+                                        <input type="checkbox" id="indeterminate-checkbox" ng-model="death" onchange="disableCh()"/>
                                         <label for="indeterminate-checkbox">Death</label>
                                     </p>
 
@@ -500,13 +512,13 @@
                                         <div class="input-field col s6">
                                             <label for="fname">Died On</label>
                                             <br/>
-                                            <input type="date" id="deathday" name="deathday" ng-disabled="death == false"/>
+                                            <input type="date" id="deathday" name="deathday" disabled/>
                                             <p>${deatherror}</p>
                                         </div>
                                         <div class="input-field col s6">
                                             <label for="fname">Reason</label>
                                             <br/>
-                                            <input type="text"  class=" validate" name="reason" ng-disabled="death == false"/>
+                                            <input type="text"  class=" validate" name="reason"  id="dreason"  disabled=""/>
                                             <p>${deathvalue}</p>
                                         </div>
 
@@ -515,13 +527,13 @@
                                         <div class="input-field col s6">
                                             <label for="fname">Location</label>
                                             <br/>
-                                            <input type="text"  class=" validate" name="location" ng-disabled="death == false" />
+                                            <input type="text"  class=" validate" name="location"  id="dlocation" disabled=""/>
                                             <p>${deathvalue}</p>
                                         </div>
                                         <div class="input-field col s6">
                                             <label for="fname">Comment</label>
                                             <br/>
-                                            <input type="text"  class=" validate" name="comment" ng-disabled="death == false"/>
+                                            <input type="text"  class=" validate" name="comment" id="dcomment" disabled=""/>
                                             <p>${deathvalue}</p>
                                         </div>
 
@@ -531,7 +543,7 @@
 
                                         <div class="input-field col s12">
 
-                                            <input type="submit" value="Next" class="waves-effect waves-light btn" />
+                                            <input type="submit" value="Next" class="waves-effect waves-light btn"/>
                                         </div>
                                     </div>
 
@@ -542,8 +554,7 @@
                     </div>
                 </div>
 
-                <!-- /.col-lg-12 --> 
-                <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
+           
             </div>
             <!-- /. PAGE INNER  -->
         </div>

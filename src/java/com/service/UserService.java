@@ -6,6 +6,7 @@
 package com.service;
 
 import com.pojos.Role;
+import com.pojos.SecurityQuestion;
 import com.pojos.User;
 import java.util.List;
 
@@ -30,5 +31,9 @@ public interface UserService {
     long getUserCount();
 
     List<User> searchUserByAdmin(String key, String cat);
+
+    public User searchRegisterUser(String nic, String email);
+
+    public SecurityQuestion searchQuestion();
 
 }

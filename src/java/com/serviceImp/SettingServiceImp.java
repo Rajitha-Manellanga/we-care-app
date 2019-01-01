@@ -6,10 +6,14 @@
 package com.serviceImp;
 
 import com.dao.SettingDAO;
+import com.daoimp.PRCategory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pojos.AllowanceDonator;
 import com.pojos.District;
 import com.pojos.DivisionalSecretariat;
+import com.pojos.Event;
+import com.pojos.PrivateRecord;
 import com.pojos.Province;
 import com.service.SettingService;
 import java.util.ArrayList;
@@ -77,17 +81,45 @@ public class SettingServiceImp implements SettingService {
 
     @Override
     public String loadPrivateRecord(String type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String toJson = null;
+        try {
+
+            List<PrivateRecord> list = this.settingdao.loadPrivateRecord(type);
+            ArrayList al = new ArrayList(list);
+            ObjectMapper objectMapper = new ObjectMapper();
+            toJson = objectMapper.writeValueAsString(al);
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return toJson;
     }
 
     @Override
     public String loadPrivateRecord(String type, String subtype) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String toJson = null;
+        try {
+
+            List<PrivateRecord> list = this.settingdao.loadPrivateRecord(type, subtype);
+            ArrayList al = new ArrayList(list);
+            ObjectMapper objectMapper = new ObjectMapper();
+            toJson = objectMapper.writeValueAsString(al);
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return toJson;
     }
 
     @Override
-    public String loadPrivateRecord(String type, String subtype, String value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PrivateRecord loadPrivateRecord(String type, String subtype, String value) {
+        PrivateRecord pr = null;
+        try {
+
+            pr = this.settingdao.loadPrivateRecord(type, subtype, value);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return pr;
     }
 
     @Override
@@ -98,6 +130,77 @@ public class SettingServiceImp implements SettingService {
     @Override
     public String loadDonors(String name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String loadEvents() {
+        String toJson = null;
+        try {
+
+            List<Event> list = this.settingdao.loadEvents();
+            ArrayList al = new ArrayList(list);
+            ObjectMapper objectMapper = new ObjectMapper();
+            toJson = objectMapper.writeValueAsString(al);
+
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return toJson;
+    }
+
+    @Override
+    public void saveEvent(Event event) {
+        this.settingdao.saveEvent(event);
+    }
+
+    @Override
+    public Event searchEvent(String event) {
+        return this.settingdao.searchEvent(event);
+    }
+
+    @Override
+    public void saveDonor(AllowanceDonator ad) {
+        this.settingdao.saveDonor(ad);
+    }
+
+    @Override
+    public String receiveRowCount() {
+
+        String toJson = null;
+        try {
+
+            List<Long> list = this.settingdao.loadRecordCount();
+            ArrayList al = new ArrayList(list);
+            ObjectMapper objectMapper = new ObjectMapper();
+            toJson = objectMapper.writeValueAsString(al);
+
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return toJson;
+    }
+
+    @Override
+    public String receiveCatNo() {
+         String toJson = null;
+        try {
+
+            List<PrivateRecord> list = this.settingdao.loadPrivateRecord(PRCategory.DISABILITY.toString());
+            ArrayList al = new ArrayList(list);
+            ObjectMapper objectMapper = new ObjectMapper();
+            toJson = objectMapper.writeValueAsString(al);
+
+        } catch (JsonProcessingException ex) {
+            ex.printStackTrace();
+        }
+        return toJson;
+    }
+
+    @Override
+    public void savePR(PrivateRecord pr) {
+        
+        this.settingdao.savePR(pr);
+       
     }
 
 }

@@ -33,7 +33,7 @@
     <head>
         <title>Differently Abled Person Profile</title>
     </head>
-    <body>
+    <body onload="checkDeathDeatils()">
         <div id="page-wrapper" >
             <div class="header"> 
                 <h4 class="page-header">
@@ -45,6 +45,44 @@
                 </ol> 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.js"></script>
                 <script src="${angularJS}" type="text/javascript"></script>
+                <script type="text/javascript">
+        var datefield = document.createElement("input");
+        datefield.setAttribute("type", "date");
+        if (datefield.type != "date") { //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+            document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n');
+            document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n');
+            document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n');
+        }
+
+        var checkDeathDeatils = function () {
+            var rows = document.getElementById('displayTable').getElementsByTagName("tr").length;
+            var x = document.getElementById('deathday');
+            var y = document.getElementById('dreason');
+            var z = document.getElementById('dlocation');
+            var w = document.getElementById('dreason');
+            var v = document.getElementById('dcomment');
+            if (rows != 0) {
+                v.disabled = true;
+                x.disabled = true;
+                y.disabled = true;
+                z.disabled = true;
+                w.disabled = true;
+            }
+        };
+
+
+                </script>
+
+
+                <script>
+                    if (datefield.type != "date") { //if browser doesn't support input type="date", initialize date picker widget:
+                        jQuery(function ($) { //on document.ready
+                            $('#birthday').datepicker();
+                            $('#deathday').datepicker();
+                            $('#ddate').datepicker();
+                        });
+                    }
+                </script>
                 <script>
                     var app = angular.module('diffabapp', []);
                     // here we define our unique filter
@@ -98,34 +136,47 @@
 
 //skills
                     app.controller('skillCtrl', function ($scope, $http) {
+
                         $http({
                             method: 'GET',
-                            url: '/DifferentlyAbledTracker/loadskill.htm '
+                            url: '/DifferentlyAbledTracker/loadskill.htm'
 
                         }).then(function displayData(response) {
+
                             $scope.skilldata = response.data;
 
+
                         });
+
                         $scope.getSkillValue = function () {
-                            var select = document.getElementById('skillcat');
+
+                            var select = document.getElementById('skillsubcat');
+
                             var length = select.options.length;
+                            //length=0;
                             for (i = 0; i <= length; i++) {
                                 select.options[i] = null;
                                 if ((i - 1) >= 0)
                                     select.options[i - 1] = null;
                             }
+
                             $http({
                                 method: 'GET',
-                                url: '/DifferentlyAbledTracker/loadsubskill.htm?skillcat=' + $scope.result
-
+                                url: '/DifferentlyAbledTracker/loadsubskill.htm?cat=' + $scope.result
 
                             }).then(function displayData(response) {
-                                $scope.skilldata = response.data;
+                                $scope.disabilitydata2 = response.data;
                                 $scope.subresult = [];
-                                for (var i in $scope.skilldata) {
 
-                                    $scope.subresult.push($scope.skilldata[i].subName);
+
+
+                                for (var i in $scope.disabilitydata2) {
+                                    $scope.subresult.push($scope.disabilitydata2[i].subName);
+
+
                                 }
+
+
                                 for (var i in $scope.subresult) {
                                     var opt = $scope.subresult[i];
                                     var el = document.createElement("option");
@@ -141,6 +192,15 @@
 
                             });
                         };
+
+
+
+
+
+
+
+
+
                     });
                     app.controller('eventCtrl', function ($scope, $http) {
                         $http({
@@ -182,7 +242,7 @@
                             }
                             $http({
                                 method: 'GET',
-                                url: '/DifferentlyAbledTracker/loadsuballowance.htm?allowcat=' + $scope.result
+                                url: '/DifferentlyAbledTracker/loadsuballowance.htm?cat=' + $scope.result
 
                             }).then(function displayData(response) {
                                 $scope.disabilitydata2 = response.data;
@@ -348,6 +408,7 @@
                             var timefrom = document.getElementById('skillfrom').value;
                             var timeto = document.getElementById('skillto').value;
                             var bool = false;
+
                             var tbl = document.getElementById('displayTableSkill');
                             for (var i = 0, row; row = tbl.rows[i]; i++) {
 
@@ -356,7 +417,7 @@
                                 for (var j = 0, col; col = row.cells[j]; j++) {
                                     //iterate through columns
                                     //columns would be accessed using the "col" variable assigned in the for loop
-                                    var count = 0;
+
 
                                     if (i > 0) {
                                         var x = col.innerHTML.split('<')[0];
@@ -373,9 +434,14 @@
 
                                 }
                             }
+
                             if (bool == false) {
+                                for (var i = 0; i < $scope.skillList.length; i++) {
+                                    var value = $scope.skillList[i];
+
+                                }
                                 if (primary !== '? undefined:undefined ?') {
-                                    $scope.disabilityList.push({Category: primary, SubCategory: second, from: timefrom, to: timeto});
+                                    $scope.skillList.push({Category: primary, SubCategory: second, from: timefrom, to: timeto});
                                 } else {
                                     alert('Please select a value from Category');
                                 }
@@ -672,12 +738,12 @@
                                                 <label for="fname">Died On</label>
                                                 <br/>
 
-                                                <input type="date" id="deathday" name="deathday" ng-disabled="death == false" />
+                                                <input type="date" id="deathday" name="deathday" />
                                             </div>
                                             <div class="input-field col s6">
                                                 <label for="fname">Reason</label>
                                                 <br/>
-                                                <input type="text"  class=" validate" name="reason" ng-disabled="death == false"/>
+                                                <input type="text"  class=" validate" name="reason" id="dreason" id="deathday"/>
                                             </div>
 
                                         </div>
@@ -685,12 +751,12 @@
                                             <div class="input-field col s6">
                                                 <label for="location">Location</label>
                                                 <br/>
-                                                <input type="text"  class=" validate" name="location" ng-disabled="death == false" />
+                                                <input type="text"  class=" validate" name="location" id="dlocation"/>
                                             </div>
                                             <div class="input-field col s6">
                                                 <label for="comment">Comment</label>
                                                 <br/>
-                                                <input type="text"  class=" validate" name="comment" ng-disabled="death == false"/>
+                                                <input type="text"  class=" validate" name="comment" id="dcomment"/>
                                             </div>
 
                                         </div>
@@ -783,7 +849,7 @@
                                                         <th>Relationship</th>
                                                         <th>From</th>
                                                         <th>To</th>
-                                                        <th>View Profile</th>
+                                                       
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -796,7 +862,7 @@
                                                             <td>${gurd.guardian.relationship}</td>
                                                             <td>${gurd.startingYear}</td>
                                                             <td>${gurd.endingYear}</td>
-                                                            <td><a href="guardianprofile.htm?code=${needyperson.code}&gid=${gurd.guardian.id}&gval=${gurd.id}">View Profile</a></td>
+                                                           
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -1107,7 +1173,8 @@
                                                 <label for="add1">Date</label>
                                                 <br/>
                                                 <br/>
-                                                <input type="date"  class=" validate" name="aldate"/>
+                                                <input type="date"  class=" validate" name="aldate" id="ddate"/>
+                                               
                                             </div>
                                         </div>
 
@@ -1167,7 +1234,7 @@
                                 </div>
                                 <div id="test6">
                                     <form id="event" method="POST" action="saveneedyevent.htm">
-                                        <input type="hidden" value="${needyperson.code}" name="gncode"/>
+                                        <input type="hidden" value="${needyperson.code}" name="ecode"/>
                                         <h5>Events Details</h5>
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -1175,7 +1242,7 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Event</th>
-                                                        <th>Acheivement</th>
+                                                        <th>Achievement</th>
                                                         <th>Comment</th>
 
                                                     </tr>
@@ -1214,7 +1281,7 @@
 
 
                                             <div class="input-field col s6">
-                                                <label for="unit">Achivement</label>
+                                                <label for="unit">Achievement</label>
                                                 <br/>
                                                 <br/>
 
@@ -1274,8 +1341,6 @@
                 </div>
             </div>
 
-            <!-- /.col-lg-12 --> 
-            <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
         </div>
         <%@include file="resourcefilejs.jsp" %>
     </body>

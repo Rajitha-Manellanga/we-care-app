@@ -6,6 +6,8 @@
 package com.dao;
 
 import com.pojos.Login;
+import com.pojos.NeedyLogin;
+import com.pojos.NeedyPerson;
 import org.hibernate.Session;
 
 /**
@@ -14,5 +16,7 @@ import org.hibernate.Session;
  */
 public interface LoginDAO {
     void saveLogin(Login login);
+
+    public void saveNeedyLogin(NeedyLogin login, NeedyPerson np);
     
 }

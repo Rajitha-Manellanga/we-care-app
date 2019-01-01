@@ -17,8 +17,14 @@ import static com.additional.ValidateRecords.checkBloodGroup;
 import static com.additional.ValidateRecords.checkEducationalLevel;
 import static com.additional.ValidateRecords.checkGender;
 import static com.additional.ValidateRecords.checkMartialStatus;
+import com.daoimp.PRCategory;
+import com.daoimp.RoleName;
+import com.pojos.Allowance;
+import com.pojos.AllowanceDonator;
 import com.pojos.DeathDetail;
 import com.pojos.DeathDetailId;
+import com.pojos.Event;
+import com.pojos.NeedyPersonHasEvent;
 import com.pojos.NeedyPersonHasGuardian;
 import com.service.SettingService;
 import java.text.ParseException;
@@ -87,7 +93,7 @@ public class NeedyController {
 
     @RequestMapping(value = "/newneedy2")
     @DateTimeFormat(pattern = "YYYY-MM-dd")
-    public String submitNeedyRegistrationForm(HttpSession httpSession, @RequestParam Map<String, String> reqPar, HttpServletRequest request, Model model) throws ParseException {
+    public String submitNeedyRegistrationForm(HttpSession httpSession, @RequestParam Map<String, String> reqPar, HttpServletRequest request, Model model) {
 
         String code = reqPar.get("code");
         String firstname = reqPar.get("firstname");
@@ -111,109 +117,129 @@ public class NeedyController {
         String boo = reqPar.get("booleandeath");
         String bgval, mstatus, edulvl = null;
 
-        //check bloodgrp
-        bgval = checkBloodGroup(bloodgroup);
+        try {
 
-        //check martailstatus
-        mstatus = checkMartialStatus(martialstatus);
-        //check edulevel;
-        edulvl = checkEducationalLevel(edulevel);
+            if (firstname.length() == 0 || lastname.length() == 0 || nic.length() == 0
+                    || fullname.length() == 0) {
 
-        NeedyPerson needyPerson = new NeedyPerson();
-        needyPerson.setId((int) this.needyService.receiveId());
-        needyPerson.setCode(code);
-        needyPerson.setFirstName(firstname);
-        needyPerson.setLastName(lastname);
-        needyPerson.setFullName(fullname);
-        needyPerson.setNic(nic);
-        needyPerson.setGender(gender);
+            }
+            //check bloodgrp
+            bgval = checkBloodGroup(bloodgroup);
 
-        needyPerson.setBloodGroup(bgval);
-        needyPerson.setMartialStatus(mstatus);
-        needyPerson.setEducationalLevel(edulvl);
+            //check martailstatus
+            mstatus = checkMartialStatus(martialstatus);
+            //check edulevel;
+            edulvl = checkEducationalLevel(edulevel);
 
-        System.out.println("@@@@" + boo);
-        //set dob
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String[] split = null;
-        if (!dob.equals(null)) {
-            split = dob.split("/");
-            dob = split[2] + "-" + split[1] + "-" + split[0];
+            NeedyPerson needyPerson = new NeedyPerson();
+            needyPerson.setId((int) this.needyService.receiveId());
+            needyPerson.setCode(code);
+            needyPerson.setFirstName(firstname);
+            needyPerson.setLastName(lastname);
+            needyPerson.setFullName(fullname);
+            needyPerson.setNic(nic);
+            needyPerson.setGender(gender);
 
-            Date birth = df.parse(dob);
-            needyPerson.setDob(birth);
+            needyPerson.setBloodGroup(bgval);
+            needyPerson.setMartialStatus(mstatus);
+            needyPerson.setEducationalLevel(edulvl);
+
+            //set dob
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String[] split = null;
+            if (!dob.equals(null)) {
+                split = dob.split("/");
+                dob = split[2] + "-" + split[1] + "-" + split[0];
+
+                Date birth = df.parse(dob);
+                needyPerson.setDob(birth);
+            }
+            //set death
+            String[] split2 = null;
+            Set<DeathDetail> dds;
+            if (deathday != null || boo != null) {
+               
+                split2 = deathday.split("/");
+                deathday = split2[2] + "-" + split2[0] + "-" + split2[1];
+                 System.out.println("^^_"+deathday);
+                Date death = df.parse(deathday);
+                
+                DeathDetail deathDetail = new DeathDetail();
+                DeathDetailId ddi = new DeathDetailId();
+                ddi.setId((int) this.needyService.searchDeathRecords());
+                ddi.setNeedyPersonId(needyPerson.getId());
+
+                deathDetail.setId(ddi);
+                deathDetail.setComment(comment);
+                deathDetail.setDeathDate(death);
+                deathDetail.setLocation(location);
+                deathDetail.setReason(reason);
+                deathDetail.setNeedyPerson(needyPerson);
+
+                dds = new HashSet<>();
+                dds.add(deathDetail);
+                needyPerson.setDeathDetails(dds);
+
+            }
+
+            //set ds
+            DivisionalSecretariat divisionalSecretariat = needyService.receiveNeedyDS(ds);
+            needyPerson.setDivisionalSecretariat(divisionalSecretariat);
+
+            String val, subval;
+            PrivateRecord pr;
+
+            PrivateRecordHasNeedyPerson prhnp;
+
+            Set<PrivateRecordHasNeedyPerson> privateRecordHasNeedyPersons = new HashSet<>();
+
+            for (int i = 0; i < cat.length; i++) {
+                val = cat[i];
+                subval = subcat[i];
+
+                //receive the object vlaue of pvt record
+                pr = needyService.serachDisability(val, subval);
+
+                prhnp = new PrivateRecordHasNeedyPerson();
+
+                // prhnp.setId((int) needyService.searchNeedyhasPvtRecord());
+                prhnp.setNeedyPerson(needyPerson);
+                prhnp.setPrivateRecord(pr);
+                prhnp.setStartingYear(Integer.valueOf(from[i]));
+                prhnp.setEndingYear(Integer.valueOf(to[i]));
+                prhnp.setStatus("A");
+
+                privateRecordHasNeedyPersons.add(prhnp);
+
+            }
+
+            needyPerson.setPrivateRecordHasNeedyPersons(privateRecordHasNeedyPersons);
+
+            //set Role
+            Role receiveNeedyRole = this.needyService.receiveNeedyRole();
+            needyPerson.setRole(receiveNeedyRole);
+            //setUser
+            User u = (User) httpSession.getAttribute("LOGGEDIN_USER");
+            if (u != null) {
+                needyPerson.setUser(u);
+            }
+            httpSession.setAttribute("needyperson", needyPerson);
+        } catch (NullPointerException e) {
+            model.addAttribute("error", e.getMessage());
+            e.printStackTrace();
+            return "redirect:newneedy1.htm";
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            model.addAttribute("error", e.getMessage());
+            return "redirect:newneedy1.htm";
+        } catch (ParseException e) {
+            e.printStackTrace();
+            model.addAttribute("error", e.getMessage());
+            return "redirect:newneedy1.htm";
         }
-        //set death
-        String[] split2 = null;
-        Set<DeathDetail> dds;
-        if (deathday != null || boo != null) {
-            split2 = deathday.split("/");
-            deathday = split2[2] + "-" + split2[1] + "-" + split2[0];
-            Date death = df.parse(deathday);
 
-            DeathDetail deathDetail = new DeathDetail();
-            DeathDetailId ddi = new DeathDetailId();
-            ddi.setId((int) this.needyService.searchDeathRecords());
-
-            deathDetail.setId(ddi);
-            deathDetail.setComment(comment);
-            deathDetail.setDeathDate(death);
-            deathDetail.setLocation(location);
-            deathDetail.setReason(reason);
-            deathDetail.setNeedyPerson(needyPerson);
-
-            dds = new HashSet<>();
-            dds.add(deathDetail);
-            needyPerson.setDeathDetails(dds);
-
-        }
-
-        //set ds
-        DivisionalSecretariat divisionalSecretariat = needyService.receiveNeedyDS(ds);
-        needyPerson.setDivisionalSecretariat(divisionalSecretariat);
-
-        String val, subval;
-        PrivateRecord pr;
-
-        PrivateRecordHasNeedyPerson prhnp;
-
-        Set<PrivateRecordHasNeedyPerson> privateRecordHasNeedyPersons = new HashSet<>();
-
-        for (int i = 0; i < cat.length; i++) {
-            val = cat[i];
-            subval = subcat[i];
-
-            //receive the object vlaue of pvt record
-            pr = needyService.serachDisability(val, subval);
-
-            prhnp = new PrivateRecordHasNeedyPerson();
-
-            // prhnp.setId((int) needyService.searchNeedyhasPvtRecord());
-            prhnp.setNeedyPerson(needyPerson);
-            prhnp.setPrivateRecord(pr);
-            prhnp.setStartingYear(Integer.valueOf(from[i]));
-            prhnp.setEndingYear(Integer.valueOf(to[i]));
-            prhnp.setStatus("A");
-
-            privateRecordHasNeedyPersons.add(prhnp);
-
-        }
-
-        needyPerson.setPrivateRecordHasNeedyPersons(privateRecordHasNeedyPersons);
-
-        //set Role
-        Role receiveNeedyRole = this.needyService.receiveNeedyRole();
-        needyPerson.setRole(receiveNeedyRole);
-        //setUser
-        User u = (User) httpSession.getAttribute("LOGGEDIN_USER");
-        if (u != null) {
-            needyPerson.setUser(u);
-        }
-
-        httpSession.setAttribute("needyperson", needyPerson);
         //httpSession.setAttribute("deathdetails", deathDetail);
         //httpSession.setAttribute("needydisability", privateRecordHasNeedyPersons);
-
         return "new_needy2";
 
     }
@@ -227,20 +253,41 @@ public class NeedyController {
         String postal = reqPar.get("postal");
         String mob = reqPar.get("mobile");
         String em = reqPar.get("email");
+        User u = null;
 
-        NeedyPerson needyPerson = (NeedyPerson) httpSession.getAttribute("needyperson");
-        needyPerson.setAddressLine1(ad1);
-        needyPerson.setAddressLine2(ad2);
-        needyPerson.setCity(city);
-        needyPerson.setPostalCode(postal);
-        needyPerson.setMobile(mob);
-        needyPerson.setEmail(em);
-        //DeathDetail deathDetail = (DeathDetail) httpSession.getAttribute("deathdetails");
-        // Set<PrivateRecordHasNeedyPerson> records = (Set<PrivateRecordHasNeedyPerson>) httpSession.getAttribute("needydisability")
+        try {
 
-        this.needyService.saveNeeyPersonRecords(needyPerson);
+            if (ad1.length() == 0 || city.length() == 0 || postal.length() == 0) {
+                return "redirect:newneedy1.htm";
+            }
 
-        return "adminhome.htm";
+            NeedyPerson needyPerson = (NeedyPerson) httpSession.getAttribute("needyperson");
+            needyPerson.setAddressLine1(ad1);
+            needyPerson.setAddressLine2(ad2);
+            needyPerson.setCity(city);
+            needyPerson.setPostalCode(postal);
+            needyPerson.setMobile(mob);
+            needyPerson.setEmail(em);
+
+            u = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+            if (u != null) {
+                if (u.getRole().getName().equals(RoleName.ADMIN.toString())) {
+                    this.needyService.saveNeeyPersonRecords(needyPerson);
+                    return "redirect:adminhome.htm";
+                }
+                if (u.getRole().getName().equals(RoleName.NEEDY.toString())) {
+                    //this.needyService.saveNeeyPersonRecords(needyPerson);
+                    // return "redirect:adminhome.htm";
+                } else {
+                    this.needyService.saveNeeyPersonRecords(needyPerson);
+                    return "redirect:home.htm";
+                }
+            }
+        } catch (NullPointerException e) {
+            return "newneedy2.htm";
+        }
+
+        return "newneedy2.htm";
     }
 
     @RequestMapping(value = "/registerneedy3", method = RequestMethod.POST)
@@ -259,37 +306,57 @@ public class NeedyController {
         String postal = reqPar.get("postal");
         String mob = reqPar.get("mobile");
         String em = reqPar.get("email");
+        try {
 
-        NeedyPerson needyPerson = (NeedyPerson) httpSession.getAttribute("needyperson");
-        Guardian guardian = new Guardian();
-        guardian.setId((int) this.needyService.receiveGuardianId());
-        guardian.setAddressLine1(ad1);
-        guardian.setAddressLine2(ad2);
-        guardian.setCity(city);
-        guardian.setEmail(em);
-        guardian.setFirstName(fname);
-        guardian.setGender(gender);
-        guardian.setLastName(lname);
-        guardian.setMobile(mob);
-        guardian.setNic(nic);
-        guardian.setPostalCode(postal);
-        guardian.setNic(nic);
-        guardian.setRelationship(gtype);
+            if (fname.length() == 0 || lname.length() == 0 || nic.length() == 0 || ad1.length() == 0 || city.length() == 0 || postal.length() == 0) {
+                return "redirect:newneedy1.htm";
+            }
+            NeedyPerson needyPerson = (NeedyPerson) httpSession.getAttribute("needyperson");
+            Guardian guardian = new Guardian();
+            guardian.setId((int) this.needyService.receiveGuardianId());
+            guardian.setAddressLine1(ad1);
+            guardian.setAddressLine2(ad2);
+            guardian.setCity(city);
+            guardian.setEmail(em);
+            guardian.setFirstName(fname);
+            guardian.setGender(gender);
+            guardian.setLastName(lname);
+            guardian.setMobile(mob);
+            guardian.setNic(nic);
+            guardian.setPostalCode(postal);
+            guardian.setNic(nic);
+            guardian.setRelationship(gtype);
 
-        Set<NeedyPersonHasGuardian> personHasGuardians = new HashSet<>();
-        //setId
-        NeedyPersonHasGuardian hasGuardian = new NeedyPersonHasGuardian();
-        hasGuardian.setNeedyPerson(needyPerson);
-        hasGuardian.setGuardian(guardian);
-        hasGuardian.setStartingYear(Integer.parseInt(gfrom));
-        hasGuardian.setEndingYear(Integer.parseInt(gto));
+            Set<NeedyPersonHasGuardian> personHasGuardians = new HashSet<>();
+            //setId
+            NeedyPersonHasGuardian hasGuardian = new NeedyPersonHasGuardian();
+            hasGuardian.setNeedyPerson(needyPerson);
+            hasGuardian.setGuardian(guardian);
+            hasGuardian.setStartingYear(Integer.parseInt(gfrom));
+            hasGuardian.setEndingYear(Integer.parseInt(gto));
 
-        personHasGuardians.add(hasGuardian);
-        guardian.setNeedyPersonHasGuardians(personHasGuardians);
+            personHasGuardians.add(hasGuardian);
+            guardian.setNeedyPersonHasGuardians(personHasGuardians);
 
-        this.needyService.saveNeeyPersonRecords2(needyPerson, guardian);
+            this.needyService.saveNeeyPersonRecords2(needyPerson, guardian);
+            User u = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+            if (u != null) {
+                if (u.getRole().getName().equals(RoleName.ADMIN.toString())) {
+                    return "redirect:adminhome.htm";
+                }
+                if (u.getRole().getName().equals(RoleName.NEEDY.toString())) {
 
-        return "adminhome";
+                } else {
+                    return "redirect:home.htm";
+                }
+
+            }
+        } catch (NullPointerException e) {
+            return "redirect:newneedy1.htm";
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return "redirect:newneedy1.htm";
+        }
+        return "redirect:adminhome.htm";
 
     }
 
@@ -320,6 +387,23 @@ public class NeedyController {
 
         String displayDisability = needyService.displayDisability();
         return displayDisability;
+
+    }
+
+    @RequestMapping(value = "/deleteneedy", method = RequestMethod.GET)
+    public ModelAndView deleteNeedy(@RequestParam String code) {
+        try {
+            NeedyPerson np = this.needyService.receiveCode(code);
+            if (np != null) {
+                System.out.println("######");
+                this.needyService.deleteNeedy(np);
+
+            }
+        } catch (Exception e) {
+        }
+
+        ModelAndView mav = new ModelAndView("redirect:viewneedy.htm");
+        return mav;
 
     }
 
@@ -368,7 +452,7 @@ public class NeedyController {
 
     //updateneedycontact.htm
     @RequestMapping(value = "/guardianprofile.htm", method = RequestMethod.GET)
-    public ModelAndView guardianProfile(HttpServletRequest request, @RequestParam String code, @RequestParam String gid, @RequestParam String gval) {
+    public ModelAndView guardianProfile(HttpServletRequest request, @RequestParam String code, @RequestParam String gid) {
         ModelAndView mav = new ModelAndView("guardian_profile");
         Guardian g = this.needyService.searcgGuardian(Integer.parseInt(gid));
         NeedyPerson np = this.needyService.receiveCode(code);
@@ -386,8 +470,84 @@ public class NeedyController {
         return mav;
     }
 
-    @RequestMapping(value = "/updateguardianprofile", method = RequestMethod.POST)
-    public String updateNeedyGuardianProfile(HttpServletRequest request, @RequestParam(value = "tolevel", required = false) String toVal) {
+    @RequestMapping(value = "/saveneedyevent", method = RequestMethod.POST)
+    public String saveEventsNeedy(HttpServletRequest request) {
+        //String val = this.needyService.saveNeedyE
+        String event = request.getParameter("eevent");
+        String ach = request.getParameter("each");
+        String comment = request.getParameter("ecomment");
+        String code = request.getParameter("ecode");
+
+        try {
+            if (ach.equalsIgnoreCase("Win")) {
+                ach = "W";
+            } else {
+                ach = "P";
+            }
+            NeedyPerson np = this.needyService.receiveCode(code);
+            Event event1 = this.settingService.searchEvent(event);
+            NeedyPersonHasEvent hasEvent = new NeedyPersonHasEvent();
+            hasEvent.setAchievment(ach);
+            hasEvent.setEvent(event1);
+            hasEvent.setNeedyPerson(np);
+            hasEvent.setStatus("A");
+            hasEvent.setComment(comment);
+
+            this.needyService.saveNeedyEvents(hasEvent);
+        } catch (NullPointerException e) {
+            e.printStackTrace();;
+        }
+        return "redirect:needyprofile.htm?code=" + code;
+    }
+
+    @RequestMapping(value = "/saveallowance", method = RequestMethod.POST)
+    public String saveAllowanceNeedy(HttpServletRequest request) {
+
+        String cat = request.getParameter("al1");
+        String subact = request.getParameter("al2");
+        String date = request.getParameter("aldate");
+        String code = request.getParameter("alcode");
+        String unit = request.getParameter("unit");
+        String amount = request.getParameter("amount");
+        String comment = request.getParameter("alcomment");
+        String email = request.getParameter("alemail");
+
+        try {
+
+            NeedyPerson np = this.needyService.receiveCode(code);
+            AllowanceDonator ad = this.needyService.searchDonor(email);
+
+            if (ad != null) {
+
+                Allowance al = new Allowance();
+                al.setNeedyPerson(np);
+                al.setAllowanceDonator(ad);
+                al.setAmount(Double.parseDouble(amount));
+                al.setUnit(unit);
+                al.setComment(comment);
+                al.setStatus("A");
+
+                PrivateRecord pr=this.settingService.loadPrivateRecord(PRCategory.ALLOW.toString(),cat,subact);
+                String[] split = date.split("/");
+                String dval = split[0] + "-" + split[1] + "-" + split[2];
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date dateval = df.parse(dval);
+                al.setDate(dateval);
+                al.setPrivateRecord(pr);
+                
+                this.needyService.saveAllowance(al,np);
+                
+            }
+        } catch (NullPointerException e) {
+
+        } catch (ParseException ex) {
+            //Logger.getLogger(NeedyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "redirect:needyprofile.htm?code=" + code;
+    }
+
+    @RequestMapping(value = "/addgprofile", method = RequestMethod.POST)
+    public String updateNeedyGuardianProfile(HttpServletRequest request) {
         String gid = request.getParameter("gid");
         String nid = request.getParameter("needycode");
         String fname = request.getParameter("firstname");
@@ -397,36 +557,67 @@ public class NeedyController {
         String city = request.getParameter("city");
         String postalcode = request.getParameter("postalcode");
         String mobile = request.getParameter("mobile");
-        boolean boo = (fname.length() == 0 || lname.length() == 0 || addressLine1.length() == 0 || city.length() == 0 || postalcode.length() == 0);
-        NeedyPerson np = this.needyService.receiveCode(nid);
-        Set<NeedyPersonHasGuardian> needyPersonHasGuardians = np.getNeedyPersonHasGuardians();
-        Guardian temp;
-        NeedyPersonHasGuardian ncheck=null;
-        if (boo == false) {
 
-            Guardian g = this.needyService.searcgGuardian(Integer.parseInt(gid));
-            g.setFirstName(fname);
-            g.setLastName(lname);
-            g.setAddressLine1(addressLine1);
-            g.setAddressLine2(addressLine2);
-            g.setCity(city);
-            g.setPostalCode(postalcode);
-            g.setMobile(mobile);
+        try {
+            boolean boo = (fname.length() == 0 || lname.length() == 0 || addressLine1.length() == 0 || city.length() == 0 || postalcode.length() == 0);
+            NeedyPerson np = this.needyService.receiveCode(nid);
+            Set<NeedyPersonHasGuardian> needyPersonHasGuardians = np.getNeedyPersonHasGuardians();
 
-            if (toVal != null) {
+            if (boo == false) {
 
-                for (NeedyPersonHasGuardian nphg : needyPersonHasGuardians) {
-                    ncheck = nphg;
-                    temp = nphg.getGuardian();
-                    if (temp.getId() == g.getId()) {
-                        String ans = request.getParameter("toyear");
-                        break;
-                    }
-                }
+                Guardian g = this.needyService.searcgGuardian(Integer.parseInt(gid));
+                g.setFirstName(fname);
+                g.setLastName(lname);
+                g.setAddressLine1(addressLine1);
+                g.setAddressLine2(addressLine2);
+                g.setCity(city);
+                g.setPostalCode(postalcode);
+                g.setMobile(mobile);
+
+                this.needyService.updateGuardian(g, needyPersonHasGuardians, np);
+
             }
-            this.needyService.updateGuardian(g, null, np);
+        } catch (NullPointerException ex) {
         }
-        return "guardianprofile.htm?code=" + nid + "&gid=" + gid + "&gval=" + String.valueOf(ncheck.getId());
+
+        return "guardianprofile.htm?code=" + nid + "&gid=" + gid;
+    }
+
+    @RequestMapping(value = "/updategprofile", method = RequestMethod.POST)
+    public String updateNeedyGuardianProfil(HttpServletRequest request) {
+        String gid = request.getParameter("gid");
+        String nid = request.getParameter("needycode");
+        String fname = request.getParameter("firstname");
+        String lname = request.getParameter("lastname");
+        String addressLine1 = request.getParameter("addresss1");
+        String addressLine2 = request.getParameter("address2");
+        String city = request.getParameter("city");
+        String postalcode = request.getParameter("postalcode");
+        String mobile = request.getParameter("mobile");
+
+        try {
+            boolean boo = (fname.length() == 0 || lname.length() == 0 || addressLine1.length() == 0 || city.length() == 0 || postalcode.length() == 0);
+            NeedyPerson np = this.needyService.receiveCode(nid);
+            Set<NeedyPersonHasGuardian> needyPersonHasGuardians = np.getNeedyPersonHasGuardians();
+
+            if (boo == false) {
+
+                Guardian g = this.needyService.searcgGuardian(Integer.parseInt(gid));
+                g.setFirstName(fname);
+                g.setLastName(lname);
+                g.setAddressLine1(addressLine1);
+                g.setAddressLine2(addressLine2);
+                g.setCity(city);
+                g.setPostalCode(postalcode);
+                g.setMobile(mobile);
+
+                this.needyService.updateGuardian(g, needyPersonHasGuardians, np);
+
+            }
+        } catch (NullPointerException ex) {
+        }
+
+        return "guardianprofile.htm?code=" + nid + "&gid=" + gid;
     }
 
     @RequestMapping(value = "/updateguardian", method = RequestMethod.POST)
@@ -446,11 +637,12 @@ public class NeedyController {
         String email = request.getParameter("gemail");
         String mobile = request.getParameter("gmobile");
 
+        try{
         boolean boo = (fname.length() == 0 || lname.length() == 0 || nic.length() == 0 || addressLine1.length() == 0 || city.length() == 0 || postalcode.length() == 0);
 
         if (boo == false) {
-            System.out.println("@@@##");
-            NeedyPerson np = this.needyService.receiveCode(code);
+
+           NeedyPerson np = this.needyService.receiveCode(code);
             Guardian g = new Guardian();
             g.setRelationship(rel);
             g.setFirstName(fname);
@@ -476,6 +668,55 @@ public class NeedyController {
             this.needyService.updateGuardian(g, set, np);
 
         }
+        }catch(Exception e){
+        
+        }
+        return "redirect:needyprofile.htm?code=" + code;
+    }
+
+    @RequestMapping(value = "/updateskills", method = RequestMethod.POST)
+    public String updateNeedySkills(HttpServletRequest request) {
+        String code = request.getParameter("skcode");
+        String[] cat = request.getParameterValues("skcat");
+        String[] subcat = request.getParameterValues("sksubcat");
+        String[] from = request.getParameterValues("skfrom");
+        String[] to = request.getParameterValues("skto");
+        String val, subval;
+        PrivateRecord pr;
+        NeedyPerson needyPerson = this.needyService.receiveCode(code);
+        PrivateRecordHasNeedyPerson prhnp;
+
+        try {
+
+            Set<PrivateRecordHasNeedyPerson> privateRecordHasNeedyPersons = new HashSet<>();
+            if (cat != null) {
+                for (int i = 0; i < cat.length; i++) {
+                    val = cat[i];
+                    subval = subcat[i];
+
+                    //receive the object vlaue of pvt record
+                    pr = this.settingService.loadPrivateRecord(PRCategory.SKILL.toString(), val, subval);
+
+                    prhnp = new PrivateRecordHasNeedyPerson();
+
+                    // prhnp.setId((int) needyService.searchNeedyhasPvtRecord());
+                    prhnp.setNeedyPerson(needyPerson);
+                    prhnp.setPrivateRecord(pr);
+                    prhnp.setStartingYear(Integer.valueOf(from[i]));
+                    prhnp.setEndingYear(Integer.valueOf(to[i]));
+                    prhnp.setStatus("A");
+                    privateRecordHasNeedyPersons.add(prhnp);
+
+                }
+            }
+
+            needyPerson.setPrivateRecordHasNeedyPersons(privateRecordHasNeedyPersons);
+
+            this.needyService.updateNeedyPersonRecords(needyPerson, privateRecordHasNeedyPersons, null);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+
+        }
         return "redirect:needyprofile.htm?code=" + code;
     }
 
@@ -487,16 +728,26 @@ public class NeedyController {
         String city = request.getParameter("city");
         String postal = request.getParameter("postal");
         String mob = request.getParameter("mobile");
-        //String em = request.getParameter("email");
-        NeedyPerson needyPerson = this.needyService.receiveCode(code);
+        String em = request.getParameter("email");
+        try {
 
-        needyPerson.setAddressLine1(ad1);
-        needyPerson.setAddressLine2(ad2);
-        needyPerson.setCity(city);
-        needyPerson.setPostalCode(postal);
-        needyPerson.setMobile(mob);
+            if (ad1.length() == 0 || city.length() == 0 || postal.length() == 0) {
+                return "redirect:needyprofile.htm?code=" + code;
+            }
+            NeedyPerson needyPerson = this.needyService.receiveCode(code);
 
-        this.needyService.updateNeedyContact(needyPerson);
+            needyPerson.setAddressLine1(ad1);
+            needyPerson.setAddressLine2(ad2);
+            needyPerson.setCity(city);
+            needyPerson.setPostalCode(postal);
+            needyPerson.setMobile(mob);
+            needyPerson.setEmail(em);
+
+            this.needyService.updateNeedyContact(needyPerson);
+
+        } catch (NullPointerException ex) {
+
+        }
         return "redirect:needyprofile.htm?code=" + code;
     }
 
@@ -518,72 +769,72 @@ public class NeedyController {
         String martial = null;
         String edu = null;
 
-        Set<DeathDetail> dds = new HashSet<>();
+        try {
+            Set<DeathDetail> dds = new HashSet<>();
 
-        NeedyPerson needyPerson = this.needyService.receiveCode(code);
+            NeedyPerson needyPerson = this.needyService.receiveCode(code);
 
-        if (fname.length() != 0 && lname.length() != 0 && flname.length() != 0) {
-            needyPerson.setFirstName(fname);
-            needyPerson.setLastName(lname);
-            needyPerson.setFullName(flname);
-        }
-
-        if (mval != null) {
-            martial = checkMartialStatus(request.getParameter("martialans"));
-            needyPerson.setMartialStatus(martial);
-        }
-        if (eval != null) {
-            edu = checkEducationalLevel(request.getParameter("eduans"));
-            needyPerson.setEducationalLevel(edu);
-        }
-        ////
-        String val, subval;
-        PrivateRecord pr;
-
-        PrivateRecordHasNeedyPerson prhnp;
-
-        Set<PrivateRecordHasNeedyPerson> privateRecordHasNeedyPersons = new HashSet<>();
-        if (cat != null) {
-            for (int i = 0; i < cat.length; i++) {
-                val = cat[i];
-                subval = subcat[i];
-
-                //receive the object vlaue of pvt record
-                pr = needyService.serachDisability(val, subval);
-
-                prhnp = new PrivateRecordHasNeedyPerson();
-
-                // prhnp.setId((int) needyService.searchNeedyhasPvtRecord());
-                prhnp.setNeedyPerson(needyPerson);
-                prhnp.setPrivateRecord(pr);
-                prhnp.setStartingYear(Integer.valueOf(from[i]));
-                prhnp.setEndingYear(Integer.valueOf(to[i]));
-                prhnp.setStatus("A");
-
-                privateRecordHasNeedyPersons.add(prhnp);
-
+            if (fname.length() != 0 && lname.length() != 0 && flname.length() != 0) {
+                needyPerson.setFirstName(fname);
+                needyPerson.setLastName(lname);
+                needyPerson.setFullName(flname);
             }
-        }
 
-        needyPerson.setPrivateRecordHasNeedyPersons(privateRecordHasNeedyPersons);
+            if (mval != null) {
+                martial = checkMartialStatus(request.getParameter("martialans"));
+                needyPerson.setMartialStatus(martial);
+            }
+            if (eval != null) {
+                edu = checkEducationalLevel(request.getParameter("eduans"));
+                needyPerson.setEducationalLevel(edu);
+            }
+            ////
+            String val, subval;
+            PrivateRecord pr;
 
-        ////////
-        String deathdate = null;
-        String reason = null;
-        String location = null;
-        String comment = null;
+            PrivateRecordHasNeedyPerson prhnp;
 
-        if (deathval != null) {
+            Set<PrivateRecordHasNeedyPerson> privateRecordHasNeedyPersons = new HashSet<>();
+            if (cat != null) {
+                for (int i = 0; i < cat.length; i++) {
+                    val = cat[i];
+                    subval = subcat[i];
 
-            Set<DeathDetail> set = needyPerson.getDeathDetails();
-            String[] split2 = null;
-            deathdate = request.getParameter("deathday");
-            reason = request.getParameter("reason");
-            location = request.getParameter("location");
-            comment = request.getParameter("comment");
-            String deathday = null;;
-            if (deathdate != null && set.isEmpty()) {
-                try {
+                    //receive the object vlaue of pvt record
+                    pr = needyService.serachDisability(val, subval);
+
+                    prhnp = new PrivateRecordHasNeedyPerson();
+
+                    // prhnp.setId((int) needyService.searchNeedyhasPvtRecord());
+                    prhnp.setNeedyPerson(needyPerson);
+                    prhnp.setPrivateRecord(pr);
+                    prhnp.setStartingYear(Integer.valueOf(from[i]));
+                    prhnp.setEndingYear(Integer.valueOf(to[i]));
+                    prhnp.setStatus("A");
+
+                    privateRecordHasNeedyPersons.add(prhnp);
+
+                }
+            }
+
+            needyPerson.setPrivateRecordHasNeedyPersons(privateRecordHasNeedyPersons);
+
+            ////////
+            String deathdate = null;
+            String reason = null;
+            String location = null;
+            String comment = null;
+
+            if (deathval != null) {
+
+                Set<DeathDetail> set = needyPerson.getDeathDetails();
+                String[] split2 = null;
+                deathdate = request.getParameter("deathday");
+                reason = request.getParameter("reason");
+                location = request.getParameter("location");
+                comment = request.getParameter("comment");
+                String deathday = null;;
+                if (deathdate != null && set.isEmpty()) {
 
                     split2 = deathdate.split("/");
 
@@ -603,14 +854,20 @@ public class NeedyController {
                     deathDetail.setNeedyPerson(needyPerson);
                     dds.add(deathDetail);
                     needyPerson.setDeathDetails(dds);
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
+
                 }
+
             }
 
-        }
+            this.needyService.updateNeedyPersonRecords(needyPerson, privateRecordHasNeedyPersons, dds);
 
-        this.needyService.updateNeedyPersonRecords(needyPerson, privateRecordHasNeedyPersons, dds);
+        } catch (NullPointerException ex) {
+
+        } catch (ArrayIndexOutOfBoundsException ex) {
+
+        } catch (ParseException ex) {
+
+        }
         return "redirect:needyprofile.htm?code=" + code;
 
     }
@@ -649,7 +906,7 @@ public class NeedyController {
                 age2 = Integer.valueOf(a2);
             }
         }
-
+        System.out.println("$$$_" + age1 + "__" + age2);
         if (genderVal != null) {
             String genderAns = request.getParameter("genderans");
             gender = checkGender(genderAns);

@@ -15,21 +15,20 @@
 <s:url value="/assets/theme1/js/angular.min.js" var="angularJS"/>
 <s:url value="/assets/theme1/js/angular.min.js" var="angularJS"/>
 <%@include file="resourcefile.jsp" %>
-      <%
-   User u;
-   u=(User)request.getSession().getAttribute("LOGGEDIN_USER");
-   
-   if(u.getRole().getName().equals(RoleName.ADMIN.toString())){%>
-      <%@include  file="menu_admin.jsp" %>
-    <%}%>
-    <%
-    if(u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_PRO.toString())||
-            u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DS.toString())||
-            u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DIS.toString())
-        ){%>
-     <%@include  file="menu_user.jsp" %>
-    <%}
-    %>
+<%
+    User u;
+    u = (User) request.getSession().getAttribute("LOGGEDIN_USER");
+
+    if (u.getRole().getName().equals(RoleName.ADMIN.toString())) {%>
+<%@include  file="menu_admin.jsp" %>
+<%}%>
+<%
+    if (u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_PRO.toString())
+            || u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DS.toString())
+            || u.getRole().getName().equals(RoleName.DATA_ENTRY_OPERATOR_DIS.toString())) {%>
+<%@include  file="menu_user.jsp" %>
+<%}
+%>
 %>
 <script src="${angularJS}" type="text/javascript"></script>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="diffabapp">
@@ -39,15 +38,41 @@
         <script type="text/javascript">
             var app = angular.module('diffabapp', []);
 
+            app.filter('unique', function () {
+                // we will return a function which will take in a collection
+                // and a keyname
+                return function (collection, keyname) {
+                    // we define our output and keys array;
+                    var output = [],
+                            keys = [];
+
+                    // we utilize angular's foreach function
+                    // this takes in our original collection and an iterator function
+                    angular.forEach(collection, function (item) {
+                        // we check to see whether our object exists
+                        var key = item[keyname];
+                        // if it's not already part of our keys array
+                        if (keys.indexOf(key) === -1) {
+                            // add it to our keys array
+                            keys.push(key);
+                            // push this item to our final output array
+                            output.push(item);
+                        }
+                    });
+                    // return our array which should be devoid of
+                    // any duplicates
+                    return output;
+                };
+            });
             app.controller('addage', function ($scope) {
                 $scope.age = [];
-                
-                for(var i=1;i<=100;i++){
+
+                for (var i = 1; i <= 100; i++) {
                     $scope.age.push(i);
                 }
             });
             app.controller('addcategory', function ($scope) {
-                $scope.category = ["All", "Code", "NIC", "Name", "Gender", "Age", "Disability"];
+                $scope.category = ["All", "Code", "NIC", "Name", "Gender", "Age"];
             });
 
             app.controller('addgender', function ($scope) {
@@ -103,9 +128,13 @@
                 $scope.getValue = function () {
                     var select = document.getElementById('subcat');
                     var length = select.options.length;
-                    for (i = 0; i < length; i++) {
+                    //length=0;
+                    for (i = 0; i <= length; i++) {
                         select.options[i] = null;
+                        if ((i - 1) >= 0)
+                            select.options[i - 1] = null;
                     }
+
                     $http({
                         method: 'GET',
                         url: '/DifferentlyAbledTracker/adddisabilitysub.htm?cat=' + $scope.result
@@ -148,7 +177,7 @@
                     </h4>
                     <ol class="breadcrumb">
                         <li><a href="checkauth.htm">Home</a></li>
-                         <li><a href="viewneedy.htm">Search Pesons</a></li>
+                        <li><a href="viewneedy.htm">Search Pesons</a></li>
                     </ol> 
 
                 </div>
@@ -192,12 +221,12 @@
                                             </div>
                                             <div class="input-field col s3" ng-controller="addage">
                                                 <select class="form-control validate" name="age1">
-                                                 <option ng-repeat="x in age">{{x}}</option>
+                                                    <option ng-repeat="x in age">{{x}}</option>
                                                 </select>
                                             </div>
                                             <div class="input-field col s3" ng-controller="addage">
                                                 <select class="form-control validate" name="age2">
-                                                   <option ng-repeat="x in age">{{x}}</option>
+                                                    <option ng-repeat="x in age">{{x}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -246,7 +275,7 @@
                                                 <label for="indeterminate-checkbox8" style="visibility: hidden">AGe</label>
                                             </div>
                                             <div class="input-field col s6">
-                                                
+
                                             </div>
 
                                         </div>
@@ -255,7 +284,7 @@
                                                 <input type="checkbox"  id="indeterminate-checkbox4" class="filled-in" name="province"/>
                                                 <label for="indeterminate-checkbox4">Province</label>
                                             </div>
-                                               <div class="input-field col s6">
+                                            <div class="input-field col s6">
                                                 <select class="form-control validate" name="provinceans" ng-controller="provinceCtrl">
                                                     <option ng-repeat="x in prdata">{{x.name}}</option>
                                                 </select>
@@ -285,8 +314,8 @@
                                                 <br/>
 
                                                 <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="disbans" id="cat"> 
-                                                  
-                                                    <option ng-repeat="x in disabilitydata" >{{x.name}}</option>
+
+                                                    <option ng-repeat="x in disabilitydata|unique:'name'" >{{x.name}}</option>
                                                 </select>
                                             </div>
                                             <div class="input-field col s3">
@@ -294,7 +323,7 @@
                                                 <br/>
                                                 <br/>
                                                 <select  class="form-control validate" id="subcat" name="subdisbans"> 
-                                                  
+
                                                 </select>
                                             </div>
 

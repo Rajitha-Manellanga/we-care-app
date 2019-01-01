@@ -39,6 +39,12 @@
         <mvc:interceptor>
             <mvc:mapping path="/newuser.htm"/>
             <mvc:mapping path="/newneedy1.htm"/>
+             <mvc:mapping path="/newneedy2.htm"/>
+             <mvc:mapping path="/newneedy3.htm"/>
+              <mvc:mapping path="/viewneedy.htm"/>
+              <mvc:mapping path="/donor.htm"/>
+              <mvc:mapping path="/events.htm"/>
+                  <mvc:mapping path="/needyprofile.htm"/>
             <bean class="com.controller.LoginHandler"/>
         </mvc:interceptor>
         <mvc:interceptor>

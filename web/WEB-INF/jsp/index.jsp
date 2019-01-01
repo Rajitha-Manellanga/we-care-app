@@ -79,23 +79,25 @@
 
 
         <div class="row">
-            <div class="col-md-4"><img class="img-responsive" src="assets/theme1/homeimg/bck.png" /></div>
+            <div class="col-md-3"><img class="img-responsive" src="assets/theme1/homeimg/bck.png" /></div>
 
             <div class="col-md-4">
                 <img class="img-responsive" src="assets/theme1/homeimg/abc.jpg" style="margin-top: 10%"/>
             </div>
              <div class="col-md-4">
-                <img class="img-responsive" src="assets/theme1/homeimg/home_img2.jpg" style="margin-top: 10%;margin-right: 10px;"/>
+                <img class="img-responsive" src="assets/theme1/homeimg/home_img2.jpg" style="margin-top: 10%;margin-right: 40px;"/>
             </div>
             
 
         </div>
         <div class="row">
-            <div class="col-md-4"></div>
+            <div class="col-md-3"></div>
             <div class="col-md-8">
-                <p style="text-align: center;size: 20pt;font-weight: bold;font-size: 5em;color: #00796b;font-family: monospace">WELCOME TO V-CARE</p>
+                <br/>
+                <br/>
+                <p style="text-align: center;size: 20pt;font-weight: bold;font-size: 4em;color: #00796b;margin-top: 15px;font-family: monospace">WELCOME TO V-CARE</p>
             </div>
-             <div class="col-md-4"></div>
+             <div class="col-md-1"></div>
         </div>
 
 

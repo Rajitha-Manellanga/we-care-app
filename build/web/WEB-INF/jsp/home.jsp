@@ -70,7 +70,7 @@
     </head>
     <body>
         <div id="wrapper">
-            <%@include file="menu_admin.jsp" %>
+            <%@include file="menu_user.jsp" %>
             <div id="page-wrapper">
                 <div class="header"> 
                     <h3 class="page-header">

@@ -5,10 +5,13 @@
  */
 package com.service;
 
+import com.pojos.Allowance;
+import com.pojos.AllowanceDonator;
 import com.pojos.DeathDetail;
 import com.pojos.DivisionalSecretariat;
 import com.pojos.Guardian;
 import com.pojos.NeedyPerson;
+import com.pojos.NeedyPersonHasEvent;
 import com.pojos.NeedyPersonHasGuardian;
 import com.pojos.PrivateRecord;
 import com.pojos.PrivateRecordHasNeedyPerson;
@@ -55,5 +58,13 @@ public interface NeedyService {
     public void updateGuardian(Guardian g, Set<NeedyPersonHasGuardian> set, NeedyPerson np);
 
     public Guardian searcgGuardian(int parseInt);
+
+    public void saveNeedyEvents(NeedyPersonHasEvent hasEvent);
+
+    public AllowanceDonator searchDonor(String email);
+
+    public void deleteNeedy(NeedyPerson np);
+
+    public void saveAllowance(Allowance al, NeedyPerson np);
 
 }

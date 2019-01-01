@@ -42,10 +42,18 @@
     var app = angular.module('diffabapp', []);
 
     app.controller('addcategory', function ($scope) {
-        $scope.category = ["All", "Code", "NIC", "Name", "Email", "Disability"];
+        $scope.category = ["All", "Code", "NIC", "Name", "Email"];
     });
 
 
+</script>
+<script type="text/javascript">
+    function confdel(id){
+       var r=window.confirm("Are you sure to delete this record");
+       if(r==true){
+           window.location.href="deleteneedy.htm?code="+id;
+       }
+    }
 </script>
 
 <!DOCTYPE html>
@@ -168,7 +176,7 @@
                                                             <td>
                                                                 <a href="needyprofile.htm?code=${nlist.code}" class="btn-sm btn-primary">View</a>
                                                                 &nbsp;&nbsp;
-                                                                <a href="needyprofile.htm?code=${nlist.code}" class="btn-sm btn-danger">Delete</a>
+                                                                <a  class="btn-sm btn-danger" onclick="confdel('${nlist.code}')">Delete</a>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
@@ -187,8 +195,6 @@
                     </div>
                 </div>
 
-                <!-- /.col-lg-12 --> 
-                <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
             </div>
             <!-- /. PAGE INNER  -->
 

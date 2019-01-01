@@ -5,8 +5,10 @@
  */
 package com.controller;
 
-import com.daoimp.SecurityQueDAOImp;
+
+import com.daoimp.RoleName;
 import com.daoimp.UserDAOImp;
+import com.pojos.ActivityLogger;
 import com.pojos.Login;
 import com.pojos.NeedyLogin;
 import com.pojos.NeedyPerson;
@@ -61,7 +63,6 @@ public class LoginController implements Serializable {
         String password = reqPar.get("userpassword");
 
         User searchUser = this.userService.searchUser(username, password);
-
         //serach user type
         String roleName = searchUser.getRole().getName();
         Set<Login> logins = searchUser.getLogins();
@@ -71,16 +72,24 @@ public class LoginController implements Serializable {
         if (searchUser.getEmail().equals(username) && login.getPassword().equals(password)) {
             //create http session
             httpSession.setAttribute(session_key, searchUser);
+            //ActivityLogger al=new ActivityLogger();
+           
 
             if (roleName.equals(UserDAOImp.RoleName.ADMIN.toString())) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
                 return "redirect:adminhome.htm";
-            } else if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR.toString())) {
+            } else if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_PRO)) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
-                return "redirect:home";
+                return "homeuser.htm";
+            }else if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_DS)) {
+                model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
+                return "homeuser.htm";
+            }else if (roleName.equals(RoleName.DATA_ENTRY_OPERATOR_DIS)) {
+                model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
+                return "homeuser.htm";
             }
         } else {
-            return "login";
+            return "redirect:login.htm";
         }
         return null;
     }
@@ -92,15 +101,15 @@ public class LoginController implements Serializable {
             httpSession.invalidate();
         }
 
-        return "login";
+        return "redirect:login.htm";
     }
 
     @RequestMapping(value = "addsecurityquestion")
     @ResponseBody
     public String addSecurityQuestion() {
-        SecurityQueDAOImp securityQueDAOImp = new SecurityQueDAOImp();
-        String displayQuestion = securityQueDAOImp.displaySecurityQuestion();
-        return displayQuestion;
+       // SecurityQueDAOImp securityQueDAOImp = new SecurityQueDAOImp();
+        //String displayQuestion = securityQueDAOImp.displaySecurityQuestion();
+        return null;
 
     }
 
@@ -136,12 +145,12 @@ public class LoginController implements Serializable {
         return modelAndView;
     }
 
-//    @ExceptionHandler(value = NullPointerException.class)
-//    public ModelAndView handleNullPointerException(Exception e){
-//        //model.addAttribute("errormsg","Incorrect Login Details!!");
-//       
-//        ModelAndView modelAndView=new ModelAndView("login");
-//        modelAndView.addObject("errormsg","Incorrect Login Details!!!");
-//        return  modelAndView;
-//    }
+    @ExceptionHandler(value = NullPointerException.class)
+    public ModelAndView handleNullPointerException(Exception e){
+        //model.addAttribute("errormsg","Incorrect Login Details!!");
+       
+        ModelAndView modelAndView=new ModelAndView("login");
+        modelAndView.addObject("errormsg","Incorrect Login Details!!!");
+        return  modelAndView;
+    }
 }

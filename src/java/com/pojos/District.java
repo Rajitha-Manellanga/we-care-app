@@ -2,6 +2,7 @@ package com.pojos;
 // Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,9 +13,12 @@ public class District  implements java.io.Serializable {
 
 
      private int id;
+     @JsonBackReference
      private Province province;
      private String name;
+     @JsonBackReference
      private Set districtOfficers = new HashSet(0);
+     @JsonBackReference
      private Set divisionalSecretariats = new HashSet(0);
 
     public District() {

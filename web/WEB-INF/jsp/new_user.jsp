@@ -17,11 +17,31 @@
     <title>Home</title>
 </head>
 <script type="text/javascript">
+    var datefield = document.createElement("input");
+    datefield.setAttribute("type", "date");
+    if (datefield.type != "date") { //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n');
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n');
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n');
+    }
+
+
+</script>
+
+
+<script>
+    if (datefield.type != "date") { //if browser doesn't support input type="date", initialize date picker widget:
+        jQuery(function ($) { //on document.ready
+            $('#birthday').datepicker();
+        });
+    }
+</script>
+<script type="text/javascript">
     var app = angular.module('diffabapp', []);
     app.controller('provinceCtrl', function ($scope, $http) {
         $http({
             method: 'GET',
-            url: '/DifferentlyAbledTracker/loadprovince.htm'
+            url: '/DifferentlyAbledTracker/addprovince.htm'
 
         }).then(function displayData(response) {
             $scope.prdata = response.data;
@@ -31,21 +51,21 @@
     app.controller('districtCtrl', function ($scope, $http) {
         $http({
             method: 'GET',
-            url: '/DifferentlyAbledTracker/loaddistrict.htm'
+            url: '/DifferentlyAbledTracker/adddistrict.htm'
 
         }).then(function displayData(response) {
             $scope.dctdata = response.data;
-
+            $scope.statuscode = response.status;
         });
     });
     app.controller('dsCtrl', function ($scope, $http) {
         $http({
             method: 'GET',
-            url: '/DifferentlyAbledTracker/loadds.htm'
+            url: '/DifferentlyAbledTracker/addds.htm'
 
         }).then(function displayData(response) {
             $scope.dsdata = response.data;
-
+            $scope.statuscode = response.status;
         });
     });
 </script>
@@ -62,7 +82,7 @@
                 </h4>
                 <ol class="breadcrumb">
                     <li><a href="adminhome.htm">Home</a></li>
-                 
+
                 </ol> 
 
             </div>
@@ -110,7 +130,7 @@
                                         </div>
                                         <div class="input-field col s6">
                                             <label for="dob">Date of Birth</label>
-                                            <input type="date" name="dob"/>
+                                            <input type="date" name="dob" id="birthday"/>
                                         </div>
 
                                     </div>
@@ -143,7 +163,7 @@
                                             <input type="text" name="postalcode" class=" validate"/>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!--div class="row">
                                         <div class="input-field col s6">
                                             <label for="level">Level</label>
                                             <br/>
@@ -185,10 +205,10 @@
                                                 <option ng-repeat="x in dsdata">{{x.name}}</option>
                                             </select>
                                         </div>
-                                        
+
                                     </div>
 
-                                    <br/>
+                                    <br/!-->
                                     <div class="row">
                                         <div class="input-field col s6">
                                             <label for="mobile">Mobile Number</label>
@@ -225,7 +245,7 @@
                 </div>
 
                 <!-- /.col-lg-12 --> 
-                <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
+                
             </div>
             <!-- /. PAGE INNER  -->
         </div>

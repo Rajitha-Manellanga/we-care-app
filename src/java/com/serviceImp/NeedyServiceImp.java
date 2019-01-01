@@ -6,10 +6,13 @@
 package com.serviceImp;
 
 import com.dao.NeedyDAO;
+import com.pojos.Allowance;
+import com.pojos.AllowanceDonator;
 import com.pojos.DeathDetail;
 import com.pojos.DivisionalSecretariat;
 import com.pojos.Guardian;
 import com.pojos.NeedyPerson;
+import com.pojos.NeedyPersonHasEvent;
 import com.pojos.NeedyPersonHasGuardian;
 import com.pojos.PrivateRecord;
 import com.pojos.PrivateRecordHasNeedyPerson;
@@ -171,6 +174,27 @@ public class NeedyServiceImp implements NeedyService{
     @Override
     public Guardian searcgGuardian(int parseInt) {
        return this.needyDAO.searcgGuardian(parseInt);
+    }
+
+    @Override
+    public void saveNeedyEvents(NeedyPersonHasEvent hasEvent) {
+       this.needyDAO.saveNeedyEvents(hasEvent);
+    }
+
+    @Override
+    public AllowanceDonator searchDonor(String email) {
+        return this.needyDAO.searchDonor(email);
+    }
+
+    @Override
+    public void deleteNeedy(NeedyPerson np) {
+       this.needyDAO.deleteNeedy(np);
+    }
+
+    @Override
+    public void saveAllowance(Allowance al, NeedyPerson np) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.needyDAO.saveAllowance(al, np);
     }
 
  

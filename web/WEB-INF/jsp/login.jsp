@@ -95,7 +95,7 @@
                                                 <input type="submit" value="Login" class="waves-effect waves-light btn" style="margin-left: 40%;margin-right: 40%" name="usersubmit"/>
                                                 <br/>
                                                 <br/>
-                                                <a>Forget Password?</a>
+                                               
                                                 <br/>
                                                 
 

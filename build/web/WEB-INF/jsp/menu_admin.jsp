@@ -38,10 +38,7 @@
 </nav>
 <!-- Dropdown Structure -->
 <ul id="dropdown1" class="dropdown-content">
-    <li><a href="profile.htm"><i class="fa fa-user fa-fw"></i> My Profile</a>
-    </li>
-    <li><a href="account.htm"><i class="fa fa-gear fa-fw"></i>Account Settings</a>
-    </li> 
+    
     <li><a href="logout.htm"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
     </li>
 </ul>
@@ -76,7 +73,7 @@
 
             <li>
                 <a href="#" class="waves-effect waves-dark"><i class="fa fa-sitemap"></i>Data Entry Operators<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
+                <!--ul class="nav nav-second-level">
                     <li>
                         <a href="newuser.htm">Add New <span class="fa arrow"></span></a>
                     </li>
@@ -87,7 +84,7 @@
 
 
                     </li>
-                </ul>
+                </ul-->
             </li>
             <li>
                 <a href="#" class="waves-effect waves-dark"><i class="fa fa-sitemap"></i>Allowances<span class="fa arrow"></span></a>
@@ -95,13 +92,8 @@
                     <li>
                         <a href="donor.htm">Add Donors<span class="fa arrow"></span></a>
                     </li>
-                    <li>
-                        <a href="viewdonor.htm">Search Donors<span class="fa arrow"></span></a>
-                    </li>
-                    <li>
-                        <a href="allowances.htm">Allowance<span class="fa arrow"></span></a>
-                    </li>
-
+                    
+                   
                 </ul>
             </li>
             <li>
@@ -110,9 +102,7 @@
                     <li>
                         <a href="events.htm">Add Events<span class="fa arrow"></span></a>
                     </li>
-                    <li>
-                        <a href="viewevent.htm">Search Events<span class="fa arrow"></span></a>
-                    </li>
+                 
                 </ul>
             </li>
 

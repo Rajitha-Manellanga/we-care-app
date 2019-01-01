@@ -89,7 +89,7 @@
 
                             <div class="card-content">
 
-                                <form  method="POST" action="/DifferentlyAbledTracker/registerneedy3.htm">
+                                <form  method="POST" action="registerneedy3.htm">
 
                                     <div class="row">
                                         <div class="input-field col s6" ng-controller="addrel">
@@ -125,11 +125,11 @@
                                                     <div class="row">
                                                         <div class="input-field col s6">
                                                             <label for="firstName">First Name</label>
-                                                            <input type="text"  class=" validate" name="firstname"/>
+                                                            <input type="text"  required=""class=" validate" name="firstname"/>
                                                         </div>
                                                         <div class="input-field col s6">
                                                             <label for="lastName">Last Name</label>
-                                                            <input type="text"  class=" validate" name="lastname"/>
+                                                            <input type="text" required="" class=" validate" name="lastname"/>
                                                         </div>
                                                     </div>
                                                     <br/>
@@ -153,7 +153,7 @@
                                                     <div class="row">
                                                         <div class="input-field col s6">
                                                             <label for="nic">NIC</label>
-                                                            <input type="text"  class=" validate" name="nic"/>
+                                                            <input type="text" required="" class=" validate" name="nic"/>
                                                         </div>
 
                                                     </div>
@@ -161,7 +161,7 @@
                                                     <div class="row">
                                                         <div class="input-field col s6">
                                                             <label for="addressLine1">Address Line 1</label>
-                                                            <input type="text"  class=" validate" name="addr1"/>
+                                                            <input type="text" required="" class=" validate" name="addr1"/>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -173,11 +173,11 @@
                                                     <div class="row">
                                                         <div class="input-field col s6">
                                                             <label for="city">City</label>
-                                                            <input type="text" class=" validate" name="city"/>
+                                                            <input type="text"  required=""class=" validate" name="city"/>
                                                         </div>
                                                         <div class="input-field col s6">
                                                             <label for="city">Postal Code</label>
-                                                            <input type="text" class=" validate" name="postalcode"/>
+                                                            <input type="text" class=" validate" required=""name="postalcode"/>
                                                         </div>
                                                     </div>
                                                     <br/>
@@ -205,7 +205,7 @@
                                                         <div class="input-field col s6">
 
                                                             <input type="button" value="Back" class="waves-effect waves-light btn" onclick="goBack()"/>
-                                                            <a href="registerneedy3.htm"><input type="button" value="Skip" class="waves-effect waves-light btn"/></a>
+                                                           
 
                                                             <input type="submit" value="Finish" class="waves-effect waves-light btn"/>
                                                         </div>
@@ -218,8 +218,7 @@
                                                     </div>
                                                     </div>
 
-                                                    <!-- /.col-lg-12 --> 
-                                                    <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
+                                                  
                                                     </div>
                                                     <!-- /. PAGE INNER  -->
                                                     </div>

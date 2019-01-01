@@ -95,7 +95,7 @@
                                 <div class="card-stacked">
                                     <div class="card-content" ng-controller="countCtrl">
                                         <div>
-                                            <h3>{{rowdata[0]}}54</h3> 
+                                            <h3>{{rowdata[0]}}</h3> 
                                         </div>
                                     </div>
                                     <div class="card-action">
@@ -105,23 +105,7 @@
                             </div> 
 
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-3">
-
-                            <div class="card horizontal cardIcon waves-effect waves-dark">
-                                <div class="card-image ">
-                                    <i class="fa fa-eye fa-5x"></i>
-                                </div>
-                                <div class="card-stacked">
-                                    <div class="card-content">
-                                        <h3>10</h3> 
-                                    </div>
-                                    <div class="card-action">
-                                        <strong>Registrations of the week</strong>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                       
                         <div class="col-xs-12 col-sm-6 col-md-3">
 
                             <div class="card horizontal cardIcon waves-effect waves-dark">
@@ -131,11 +115,11 @@
                                 <div class="card-stacked">
                                     <div class="card-content" ng-controller="countCtrl">
                                         <div>
-                                            <h3>{{deathrate}}74.1</h3> 
+                                            <h3>{{deathrate}}</h3> 
                                         </div>
                                     </div>
                                     <div class="card-action">
-                                        <strong>Total Death Rate</strong>
+                                        <strong>Death Rate</strong>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +134,7 @@
                                 <div class="card-stacked">
                                     <div class="card-content" ng-controller="countCtrl">
                                         <div>
-                                            <h3>{{rowdata[2]}}50</h3> 
+                                            <h3>{{rowdata[2]}}</h3> 
                                         </div>
                                     </div>
                                     <div class="card-action">
@@ -183,17 +167,8 @@
                     <div class="row"> 
 
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">                     
-                            <div class="card">
-                                <div class="card-action">
-                                    System Reports
-                                </div>
-                                <div class="card-content">
-                                    <div id="morris-bar-chart"></div>
-                                </div>
-                            </div>            
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                       
+                        <div class="col-md-10 col-sm-12 col-xs-12">
                             <div class="card">
                                 <div class="card-action">
                                     <b>Recent Statistics</b>
@@ -204,10 +179,10 @@
                                             <ul class="collection">
                                                 <li class="collection-item avatar">
                                                     <i class="material-icons circle green">folder</i>
-                                                    <span class="title">New Person Registration</span>
+                                                    <span class="title">Disability Category</span>
 
-                                                    <p>{{x.name}}</p>
-                                                    <p>{{x.subName}}</p>
+                                                    <p>{{x.name}} &nbsp; {{x.subName}}</p>
+                                                    <p></p>
                                                     <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
                                                 </li>
 

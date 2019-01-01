@@ -19,16 +19,41 @@
 
     <script type="text/javascript">
         var app = angular.module('diffabapp', []);
+         app.filter('unique', function () {
+            // we will return a function which will take in a collection
+            // and a keyname
+            return function (collection, keyname) {
+                // we define our output and keys array;
+                var output = [],
+                        keys = [];
+
+                // we utilize angular's foreach function
+                // this takes in our original collection and an iterator function
+                angular.forEach(collection, function (item) {
+                    // we check to see whether our object exists
+                    var key = item[keyname];
+                    // if it's not already part of our keys array
+                    if (keys.indexOf(key) === -1) {
+                        // add it to our keys array
+                        keys.push(key);
+                        // push this item to our final output array
+                        output.push(item);
+                    }
+                });
+                // return our array which should be devoid of
+                // any duplicates
+                return output;
+            };
+        });
         app.controller('disabilityCtrl', function ($scope, $http) {
             $http({
                 method: 'GET',
-                url: '/DifferentlyAbledTracker/loaddisability.htm '
+                url: '/DifferentlyAbledTracker/adddisability.htm'
 
             }).then(function displayData(response) {
-                $scope.disabilitydata = response.data;
-                $scope.statuscode = response.status;
 
-                //alert($scope.disabilitydata[0].subName);
+                $scope.disabilitydata = response.data;
+
 
             });
         });
@@ -45,6 +70,7 @@
 
             });
         });
+        
         app.controller('eventCtrl', function ($scope, $http) {
             $http({
                 method: 'GET',
@@ -127,7 +153,7 @@
                             </div>
 
                             <div class="card-content">
-                                <form  method="POST" action="/DifferentlyAbledTracker/adddisability.htm">                                      
+                                <form  method="POST" action="addpr.htm?cat=DISABILITY">                                      
 
 
                                     <div class="row">
@@ -154,7 +180,7 @@
 
                                 </form>
 
-                                <form  method="POST" action="/DifferentlyAbledTracker/addsubdisability.htm">                                      
+                                <form  method="POST" action="addsubpr.htm?cat=DISABILITY">                                      
 
                                     <div class="row">
                                         <div class="input-field col s12" ng-controller="disabilityCtrl">
@@ -162,17 +188,17 @@
                                             <br/>
                                             <br/>
 
-                                            <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="disb" id="cat"> 
+                                            <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="category" id="cat"> 
 
-                                                <option ng-repeat="x in disabilitydata" >{{x.name}}</option>
+                                                <option ng-repeat="x in disabilitydata|unique:'name'" >{{x.name}}</option>
                                             </select>
                                         </div>
 
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12">
-                                            <label for="name">Sub Category</label>
-                                            <input type="text"  class=" validate" name="subdisb"/>
+                                            <label for="name">Sub Category:</label>
+                                            <input type="text"  class=" validate" name="subcategory"/>
                                         </div>
 
                                     </div>
@@ -196,13 +222,13 @@
                             </div>
 
                             <div class="card-content">
-                                <form  method="POST" action="/DifferentlyAbledTracker/addskill.htm">                                      
+                                <form  method="POST" action=addpr.htm?cat=SKILL">                                      
 
 
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <label for="name">Category</label>
-                                            <input type="text"  name="skill"class=" validate"/>
+                                            <input type="text"  name="category"class=" validate"/>
                                         </div>
 
                                     </div>
@@ -224,7 +250,7 @@
 
                                 </form>
 
-                                <form  method="POST" action="/DifferentlyAbledTracker/addsubskill.htm">                                      
+                                <form  method="POST" action=addsubpr.htm?cat=SKILL">                                      
 
                                     <div class="row">
                                         <div class="input-field col s12" ng-controller="skillCtrl">
@@ -234,7 +260,7 @@
 
                                             <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="category" id="cat"> 
 
-                                                <option ng-repeat="x in skilldata" >{{x.name}}</option>
+                                                <option ng-repeat="x in skilldata|unique:'name'" >{{x.name}}</option>
                                             </select>
                                         </div>
 
@@ -260,76 +286,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-action">
-                                Add Events
-                            </div>
-
-                            <div class="card-content">
-                                <form  method="POST" action="/DifferentlyAbledTracker/addevent.htm">                                      
-
-
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <label for="name">Category</label>
-                                            <input type="text"  class=" validate" name="event"/>
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            <input type="submit" value="Add Category" class="waves-effect waves-light btn"/>
-
-                                        </div>
-                                    </div>
-
-                                </form>
-
-                                <form  method="POST" action="/DifferentlyAbledTracker/addnewneedy1.htm">                                      
-
-                                    <div class="row">
-                                        <div class="input-field col s12" ng-controller="eventCtrl">
-                                            <label>Category</label>
-                                            <br/>
-                                            <br/>
-
-                                            <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="event" id="cat"> 
-
-                                                <option ng-repeat="x in eventdata" >{{x.name}}</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <label for="name">Sub Category</label>
-                                            <input type="text"  class=" validate"/>
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            <input type="submit" value="Add Sub Category" class="waves-effect waves-light btn"/>
-
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                 </div>
             </div>
         </div>
 
-        <!-- /.col-lg-12 --> 
-        <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
+
     </div>
     <%@include file="resourcefilejs.jsp" %>
 

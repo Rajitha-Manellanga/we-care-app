@@ -6,6 +6,8 @@
 package com.service;
 
 import com.pojos.Login;
+import com.pojos.NeedyLogin;
+import com.pojos.NeedyPerson;
 
 /**
  *
@@ -13,5 +15,7 @@ import com.pojos.Login;
  */
 public interface LoginService {
     void saveLogin(Login login);
+
+    public void saveNeedyLogin(NeedyLogin login, NeedyPerson np);
     
 }

@@ -7,6 +7,8 @@ package com.serviceImp;
 
 import com.dao.LoginDAO;
 import com.pojos.Login;
+import com.pojos.NeedyLogin;
+import com.pojos.NeedyPerson;
 import com.service.LoginService;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,11 @@ public class LoginServiceImp implements LoginService{
     @Transactional
     public void saveLogin(Login login) {
        this.loginDAO.saveLogin(login);
+    }
+
+    @Override
+    public void saveNeedyLogin(NeedyLogin login, NeedyPerson np) {
+       this.loginDAO.saveNeedyLogin(login, np);
     }
     
 }

@@ -16,8 +16,12 @@ import com.pojos.Role;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.pojos.Allowance;
+import com.pojos.AllowanceDonator;
+import com.pojos.AllowanceId;
 import com.pojos.District;
 import com.pojos.Guardian;
+import com.pojos.NeedyPersonHasEvent;
 import com.pojos.NeedyPersonHasGuardian;
 import com.pojos.Province;
 import com.pojos.User;
@@ -28,9 +32,9 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -39,6 +43,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,9 +157,14 @@ public class NeedyDAOImp implements NeedyDAO {
 
         String code = null;
         Criteria criteria = session.createCriteria(NeedyPerson.class);
-        criteria.setProjection(Projections.rowCount());
-        List l = criteria.list();
-        Long x = (Long) l.get(0);
+        criteria.addOrder(Order.desc("id"));
+        criteria.setMaxResults(1);
+
+        NeedyPerson np = (NeedyPerson) criteria.uniqueResult();
+        int x = np.getId();
+//        criteria.setProjection(Projections.rowCount());
+//        List l = criteria.list();
+//        Long x = (Long) l.get(0);
         NumberFormat format = new DecimalFormat("00000000");
 
         code = format.format(x + 1) + "N";
@@ -247,18 +257,24 @@ public class NeedyDAOImp implements NeedyDAO {
     @Override
     public void saveNeeyPersonRecords(NeedyPerson needyPerson) {
         Session session = this.sessionFactory.openSession();
-        Transaction t = session.beginTransaction();
-        session.save(needyPerson);
-        Set<PrivateRecordHasNeedyPerson> ppnSet = needyPerson.getPrivateRecordHasNeedyPersons();
-        Set<DeathDetail> deathDetails = needyPerson.getDeathDetails();
-        for (DeathDetail deathDetail : deathDetails) {
-            session.save(deathDetail);
+        try {
+
+            Transaction t = session.beginTransaction();
+            session.save(needyPerson);
+            Set<PrivateRecordHasNeedyPerson> ppnSet = needyPerson.getPrivateRecordHasNeedyPersons();
+            Set<DeathDetail> deathDetails = needyPerson.getDeathDetails();
+            for (DeathDetail deathDetail : deathDetails) {
+                session.save(deathDetail);
+            }
+            for (PrivateRecordHasNeedyPerson ppn : ppnSet) {
+                session.save(ppn);
+            }
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
         }
-        for (PrivateRecordHasNeedyPerson ppn : ppnSet) {
-            session.save(ppn);
-        }
-        t.commit();
-        session.close();
     }
 
     @Override
@@ -328,6 +344,7 @@ public class NeedyDAOImp implements NeedyDAO {
         Session session = this.sessionFactory.openSession();
         Criteria criteria;
         List<NeedyPerson> needyPersons = null;
+
         try {
             criteria = session.createCriteria(NeedyPerson.class);
             switch (cat) {
@@ -444,8 +461,20 @@ public class NeedyDAOImp implements NeedyDAO {
                 criteriadisc.add(Restrictions.eq("name", district));
                 District dr = (District) criteriadisc.uniqueResult();
                 Set<DivisionalSecretariat> dval = dr.getDivisionalSecretariats();
-                for (DivisionalSecretariat dval2 : dval) {
-                    disjunction.add(Restrictions.eq("divisionalSecretariat", dval2));
+
+                if (!dval.isEmpty()) {
+                    for (DivisionalSecretariat dval2 : dval) {
+
+                        if (!dval2.getNeedyPersons().isEmpty()) {
+                            disjunction.add(Restrictions.eq("divisionalSecretariat", dval2));
+                            criteria.add(disjunction);
+                        } else {
+                           
+                            //conjunction.add(Restrictions.eq("divisionalSecretariat", dval2));
+                     
+                        }
+
+                    }
                 }
             }
 
@@ -458,22 +487,25 @@ public class NeedyDAOImp implements NeedyDAO {
             }
 
             criteria.add(conjunction);
-            criteria.add(disjunction);
             list = criteria.list();
-
             if (age2 != 0 && age1 != 0) {
+                List<NeedyPerson> li2 = new ArrayList<>();
                 list = calAge(list);
                 for (NeedyPerson np : list) {
                     int ageval = np.getAge();
-                    if (!(ageval >= age1 && ageval <= age2)) {
-                        list.remove(np);
+                    if (ageval >= age1 && ageval <= age2) {
+                        //list.remove(np);
+                        li2.add(np);
                     }
                 }
+                list = li2;
             } else {
                 list = calAge(list);
             }
 
         } catch (Exception e) {
+
+        } finally {
             session.close();
         }
 
@@ -505,15 +537,16 @@ public class NeedyDAOImp implements NeedyDAO {
         try {
 
             Transaction t = session.beginTransaction();
+            System.out.println("@#$");
             session.update(needyPerson);
 
-            if (!dds.isEmpty()) {
-
-                for (DeathDetail deathDetail : dds) {
-                    session.save(deathDetail);
-
-                }
-            }
+//            if (!dds.isEmpty()||dds!=null) {
+//
+//                for (DeathDetail deathDetail : dds) {
+//                    session.save(deathDetail);
+//
+//                }
+//            }
             if (!privateRecordHasNeedyPersons.isEmpty()) {
                 for (PrivateRecordHasNeedyPerson ppn : privateRecordHasNeedyPersons) {
                     session.save(ppn);
@@ -548,9 +581,49 @@ public class NeedyDAOImp implements NeedyDAO {
             Transaction tr = session.beginTransaction();
             session.update(np);
             session.saveOrUpdate(g);
-            if(set!=null||!set.isEmpty())
-            session.save(set.iterator().next());
+            if (set != null || !set.isEmpty()) {
+                session.save(set.iterator().next());
+            }
             tr.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public Guardian searcgGuardian(int parseInt) {
+        Session session = this.sessionFactory.openSession();
+        Guardian guardian = null;
+        try {
+            guardian = (Guardian) session.createCriteria(Guardian.class).add(Restrictions.eq("id", parseInt)).uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return guardian;
+    }
+
+    @Override
+    public void saveNeedyEvents(NeedyPersonHasEvent hasEvent) {
+        Session session = this.sessionFactory.openSession();
+
+        try {
+            Transaction tr = session.beginTransaction();
+            NeedyPerson np = hasEvent.getNeedyPerson();
+            Set<NeedyPersonHasEvent> set = new HashSet<>();
+            set.add(hasEvent);
+            np.setNeedyPersonHasEvents(set);
+            hasEvent.getEvent().setNeedyPersonHasEvents(set);
+            session.update(np);
+            session.update(hasEvent.getEvent());
+            session.save(hasEvent);
+
+            tr.commit();
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -559,17 +632,72 @@ public class NeedyDAOImp implements NeedyDAO {
     }
 
     @Override
-    public Guardian searcgGuardian(int parseInt) {
+    public AllowanceDonator searchDonor(String email) {
         Session session = this.sessionFactory.openSession();
-        Guardian guardian=null;
+        AllowanceDonator ad = null;
         try {
-           guardian=(Guardian) session.createCriteria(Guardian.class).add(Restrictions.eq("id",parseInt)).uniqueResult();
+            ad = (AllowanceDonator) session.createCriteria(AllowanceDonator.class).add(Restrictions.eq("email", email)).uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return guardian;
+        return ad;
+    }
+
+    @Override
+    public void deleteNeedy(NeedyPerson np) {
+
+//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Session session = this.sessionFactory.openSession();
+
+        try {
+            Transaction tr = session.beginTransaction();
+            session.delete(np);
+            tr.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public void saveAllowance(Allowance al, NeedyPerson np) {
+        Session session = this.sessionFactory.openSession();
+
+        try {
+            Transaction tr = session.beginTransaction();
+
+            Criteria c1 = session.createCriteria(Allowance.class);
+            c1.setProjection(Projections.rowCount());
+            List result = c1.list();
+            Long x = (Long) result.get(0);
+            x = x + 1;
+            String s = String.valueOf(x);
+            int id = Integer.parseInt(s);
+
+            AllowanceId ali = new AllowanceId();
+            ali.setId(id);
+            ali.setNeedyPersonId(np.getId());
+
+            al.setId(ali);
+
+            Set<Allowance> set = new HashSet<>();
+            set.add(al);
+
+            np.setAllowances(set);
+
+            session.update(np);
+            session.save(al);
+
+            tr.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
 }

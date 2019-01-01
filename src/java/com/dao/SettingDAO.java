@@ -36,5 +36,17 @@ public interface SettingDAO {
     Event loadEvents(String name);
 
     AllowanceDonator loadDonors(String name);
+
+    public List<Event> loadEvents();
+
+    public void saveEvent(Event event);
+
+    public Event searchEvent(String event);
+
+    public void saveDonor(AllowanceDonator ad);
+
+    public List<Long> loadRecordCount();
+
+    public void savePR(PrivateRecord pr);
     
 }

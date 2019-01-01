@@ -23,6 +23,33 @@
 
     <script type="text/javascript">
         var app = angular.module('diffabapp', []);
+        app.filter('unique', function () {
+            // we will return a function which will take in a collection
+            // and a keyname
+            return function (collection, keyname) {
+                // we define our output and keys array;
+                var output = [],
+                        keys = [];
+
+                // we utilize angular's foreach function
+                // this takes in our original collection and an iterator function
+                angular.forEach(collection, function (item) {
+                    // we check to see whether our object exists
+                    var key = item[keyname];
+                    // if it's not already part of our keys array
+                    if (keys.indexOf(key) === -1) {
+                        // add it to our keys array
+                        keys.push(key);
+                        // push this item to our final output array
+                        output.push(item);
+                    }
+                });
+                // return our array which should be devoid of
+                // any duplicates
+                return output;
+            };
+        });
+        ///
         app.controller('disabilityCtrl', function ($scope, $http) {
             $http({
                 method: 'GET',
@@ -40,9 +67,13 @@
 
             $scope.getValue = function () {
                 var select = document.getElementById('subcat');
+
                 var length = select.options.length;
-                for (i = 0; i < length; i++) {
+                //length=0;
+                for (i = 0; i <= length; i++) {
                     select.options[i] = null;
+                    if ((i - 1) >= 0)
+                        select.options[i - 1] = null;
                 }
                 $http({
                     method: 'GET',
@@ -142,7 +173,7 @@
 
                                             <select  class="form-control validate" ng-change="getValue()" ng-model="result" name="evt1" id="cat"> 
 
-                                                <option ng-repeat="x in disabilitydata" >{{x.name}}</option>
+                                                <option ng-repeat="x in disabilitydata|unique : 'name'" >{{x.name}}</option>
                                             </select>
                                         </div>
                                         <div class="input-field col s3">
@@ -187,7 +218,7 @@
 
                                     <div class="row">
                                         <div class="input-field col s6">
-                                            <input type="submit" value="Add Event" class="waves-effect waves-light btn"/>
+                                            <input type="submit" value="Save Event" class="waves-effect waves-light btn"/>
 
                                         </div>
                                     </div>

@@ -64,43 +64,43 @@
     <property name="educationalLevel" type="string">
       <column length="7" name="educational_level"/>
     </property>
-    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasGuardians" table="needy_person_has_guardian">
+    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasGuardians" table="needy_person_has_guardian" cascade="delete">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.NeedyPersonHasGuardian"/>
     </set>
-    <set fetch="select" inverse="true" lazy="false" name="deathDetails" table="death_detail">
+    <set fetch="select" inverse="true" lazy="false" cascade="delete" name="deathDetails" table="death_detail">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.DeathDetail"/>
     </set>
-    <set fetch="select" inverse="true" lazy="false" name="needyLogins" table="needy_login">
+    <set fetch="select" inverse="true" cascade="delete" lazy="false" name="needyLogins" table="needy_login">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.NeedyLogin"/>
     </set>
-    <set fetch="select" inverse="true" lazy="false" name="allowances" table="allowance">
+    <set fetch="select" inverse="true" cascade="delete" lazy="false" name="allowances" table="allowance">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.Allowance"/>
     </set>
-    <set fetch="select" inverse="true" lazy="true" name="documents" table="document">
+    <set fetch="select" inverse="true" lazy="true" cascade="delete" name="documents" table="document">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.Document"/>
     </set>
-    <set fetch="select" inverse="true" lazy="false" name="privateRecordHasNeedyPersons" table="private_record_has_needy_person">
+    <set fetch="select" inverse="true" lazy="false" cascade="delete" name="privateRecordHasNeedyPersons" table="private_record_has_needy_person">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>
       <one-to-many class="com.pojos.PrivateRecordHasNeedyPerson"/>
     </set>
-    <set fetch="select" inverse="true" lazy="false" name="needyPersonHasEvents" table="needy_person_has_event">
+    <set fetch="select" inverse="true" lazy="false" cascade="delete" name="needyPersonHasEvents" table="needy_person_has_event">
       <key>
         <column name="needy_person_id" not-null="true"/>
       </key>

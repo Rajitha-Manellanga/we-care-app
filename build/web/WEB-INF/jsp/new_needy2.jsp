@@ -72,7 +72,7 @@
                                     <div class="row">
                                         <div class="input-field col s6">
                                             <label for="addressLine1">Line 1</label>
-                                            <input type="text"  class=" validate" name="ad1"/>
+                                            <input type="text"  class=" validate" name="ad1" required=""/>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -84,11 +84,11 @@
                                     <div class="row">
                                         <div class="input-field col s6">
                                             <label for="city">City</label>
-                                            <input type="text"  class=" validate" name="city"/>
+                                            <input type="text"  class=" validate" name="city" required=""/>
                                         </div>
                                         <div class="input-field col s6">
                                             <label for="city">Postal Code</label>
-                                            <input type="text"  class=" validate" name="postal"/>
+                                            <input type="text"  class=" validate" name="postal" required=""/>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -109,7 +109,7 @@
                                     <div class="row">
                                         <div class="input-field col s4">
                                             <input type="button" value="Back" class="waves-effect waves-light btn" onclick="goBack()"/>
-                                            <a href="newneedy3.htm"> <input type="button" value="Next" class="waves-effect waves-light btn" /></a>
+                                            <!--a href="newneedy3.htm"> <input type="button" value="Next" class="waves-effect waves-light btn" /></a-->
 
                                             <input type="submit" value="Finish" class="waves-effect waves-light btn"/>
                                         </div>
@@ -124,8 +124,7 @@
             </div>
         </div>
 
-        <!-- /.col-lg-12 --> 
-        <footer><p>All right reserved. Template by: <a href="https://webthemez.com/admin-template/">WebThemez.com</a></p></footer>
+       
     </div>
     <!-- /. PAGE INNER  -->
 

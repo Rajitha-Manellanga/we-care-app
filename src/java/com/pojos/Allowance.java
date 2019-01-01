@@ -16,7 +16,7 @@ public class Allowance  implements java.io.Serializable {
      private PrivateRecord privateRecord;
      private Date date;
      private String unit;
-     private Integer amount;
+     private Double amount;
      private String comment;
      private String status;
 
@@ -30,7 +30,7 @@ public class Allowance  implements java.io.Serializable {
         this.needyPerson = needyPerson;
         this.privateRecord = privateRecord;
     }
-    public Allowance(AllowanceId id, AllowanceDonator allowanceDonator, NeedyPerson needyPerson, PrivateRecord privateRecord, Date date, String unit, Integer amount, String comment, String status) {
+    public Allowance(AllowanceId id, AllowanceDonator allowanceDonator, NeedyPerson needyPerson, PrivateRecord privateRecord, Date date, String unit,Double amount, String comment, String status) {
        this.id = id;
        this.allowanceDonator = allowanceDonator;
        this.needyPerson = needyPerson;
@@ -84,11 +84,11 @@ public class Allowance  implements java.io.Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    public Integer getAmount() {
+    public Double getAmount() {
         return this.amount;
     }
     
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
     public String getComment() {

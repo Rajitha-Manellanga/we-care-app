@@ -38,6 +38,18 @@ public class HomeController {
         return mav;
     
     }
+     @RequestMapping(value = "/homeuser",method = RequestMethod.GET)
+    public ModelAndView displayHome(HttpSession httpSession){
+        User searchuser=(User) httpSession.getAttribute("LOGGEDIN_USER");
+        ModelAndView mav=new ModelAndView("home");
+        if(searchuser!=null){
+            mav.addObject("user_name", searchuser.getFirstName()+" "+searchuser.getLastName());
+        }
+        
+        
+        return mav;
+    
+    }
 //    @RequestMapping(value = "/home",method = RequestMethod.POST)
 //    public ModelAndView displayHome(){
 //        ModelAndView modelAndView=new ModelAndView("home");

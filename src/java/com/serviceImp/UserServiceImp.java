@@ -7,6 +7,7 @@ package com.serviceImp;
 
 import com.dao.UserDAO;
 import com.pojos.Role;
+import com.pojos.SecurityQuestion;
 import com.pojos.User;
 import com.service.UserService;
 import java.util.List;
@@ -70,6 +71,17 @@ public class UserServiceImp implements UserService{
     @Transactional
     public List<User> searchUserByAdmin(String key, String cat) {
         return this.userDAO.searchUserByAdmin(key, cat);
+    }
+
+    @Override
+    public User searchRegisterUser(String nic, String email) {
+       return this.userDAO.searchRegisterUser(nic, email);
+    }
+
+    @Override
+    public SecurityQuestion searchQuestion() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.userDAO.searchQuestion();
     }
     
 }

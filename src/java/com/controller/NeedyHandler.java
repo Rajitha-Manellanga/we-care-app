@@ -36,8 +36,9 @@ public class NeedyHandler extends HandlerInterceptorAdapter{
                 ModelAndView modelAndView = new ModelAndView();
                 //modelAndView.setViewName("redirect:login.htm");
                 modelAndView.setViewName("login");
-                throw new ModelAndViewDefiningException(modelAndView);
+                //throw new ModelAndViewDefiningException(modelAndView);
 
+                return false;
             }
         
         return true;

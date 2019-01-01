@@ -5,6 +5,9 @@
  */
 package com.controller;
 
+import com.daoimp.RoleName;
+import com.daoimp.UserDAOImp;
+import com.pojos.Role;
 import com.pojos.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,22 +29,21 @@ public class LoginHandler extends HandlerInterceptorAdapter {
 //        String path = request.getRequestURI().substring(request.getContextPath().length());
         User user = (User) session.getAttribute("LOGGEDIN_USER");
 
-      
-            if (user == null) {
-                ModelAndView modelAndView = new ModelAndView();
-                //modelAndView.setViewName("redirect:login.htm");
-                modelAndView.setViewName("login");
-                throw new ModelAndViewDefiningException(modelAndView);
+        if (user == null) {
+            ModelAndView modelAndView = new ModelAndView();
+            //modelAndView.setViewName("redirect:login.htm");
+            modelAndView.setViewName("login");
+            return false;
 
-            }
-        
+        }
+
         return true;
 
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-       
+
     }
 
     @Override

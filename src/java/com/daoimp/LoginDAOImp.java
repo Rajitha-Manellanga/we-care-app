@@ -7,6 +7,8 @@ package com.daoimp;
 
 import com.dao.LoginDAO;
 import com.pojos.Login;
+import com.pojos.NeedyLogin;
+import com.pojos.NeedyPerson;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -29,13 +31,31 @@ public class LoginDAOImp implements LoginDAO {
         try {
 
             Transaction beginTransaction = session.beginTransaction();
+            session.update(login.getUser());
             session.save(login);
+
             beginTransaction.commit();
         } catch (Exception e) {
-        }finally{
+        } finally {
             session.close();
         }
 
+    }
+
+    @Override
+    public void saveNeedyLogin(NeedyLogin login, NeedyPerson np) {
+        Session session = this.sessionFactory.openSession();
+        try {
+
+            Transaction beginTransaction = session.beginTransaction();
+            session.update(np);
+            session.save(login);
+
+            beginTransaction.commit();
+        } catch (Exception e) {
+        } finally {
+            session.close();
+        }
     }
 
 }

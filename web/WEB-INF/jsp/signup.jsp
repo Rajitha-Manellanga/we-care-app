@@ -55,7 +55,7 @@
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <label for="email">Email</label>
-                                                <input type="email" class=" validate" name="useremail"/>
+                                                <input type="email" class=" validate" name="email"/>
                                             </div>
                                         </div>
                                     
@@ -64,33 +64,13 @@
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <label>Password</label>
-                                                <input type="password" class="validate" name="userpassword"/>
+                                                <input type="password" class="validate" name="password"/>
 
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <label>Retype Password</label>
-                                                <input type="password" class="validate"/>
-
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s12" ng-controller="sequeCtrl">
-                                                <label>Security Question</label>
-                                                <br/>
-                                                <br/>
-                                                <select  class="form-control validate" name="userque">
-                                                    <option ng-repeat="x in quedata">{{x.question}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <label for="answer">Answer</label>
-                                                <input type="text" class=" validate" name="userans"/>
-                                            </div>
-                                        </div>
+                                        
+                                       
+                                     
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <input type="submit" value="Signup" class="waves-effect waves-light btn" style="margin-left: 40%;margin-right: 40%"/>

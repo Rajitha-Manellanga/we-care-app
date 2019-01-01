@@ -2,6 +2,7 @@ package com.pojos;
 // Generated Sep 15, 2018 12:52:12 AM by Hibernate Tools 4.3.1
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class Event  implements java.io.Serializable {
      private String venue;
      private String description;
      private String status;
+     @JsonBackReference
      private Set needyPersonHasEvents = new HashSet(0);
 
     public Event() {
