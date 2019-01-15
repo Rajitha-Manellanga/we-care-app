@@ -78,15 +78,15 @@ public class LoginController implements Serializable {
             if (roleName.equals(UserDAOImp.RoleName.ADMIN.toString())) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
                 return "redirect:adminhome.htm";
-            } else if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_PRO)) {
+            } if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_PRO.toString())) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
-                return "homeuser.htm";
-            }else if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_DS)) {
+                return "redirect:home.htm";
+            }if (roleName.equals(UserDAOImp.RoleName.DATA_ENTRY_OPERATOR_DS.toString())) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
-                return "homeuser.htm";
-            }else if (roleName.equals(RoleName.DATA_ENTRY_OPERATOR_DIS)) {
+                return "redirect:home.htm";
+            }if (roleName.equals(RoleName.DATA_ENTRY_OPERATOR_DIS.toString())) {
                 model.addAttribute("user_name", searchUser.getFirstName() + " " + searchUser.getLastName());
-                return "homeuser.htm";
+                return "hredirect:ome.htm";
             }
         } else {
             return "redirect:login.htm";
